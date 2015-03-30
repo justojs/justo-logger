@@ -1,0 +1,51 @@
+{
+  "name": "vit-logger",
+  "version": "0.1.0",
+  "description": "A simple logger for JavaScript.",
+  "homepage": "https://github.com/vitxorg/vit-logger",
+  "license": "MIT",
+  "author": {
+    "name": "VITx",
+    "email": "vitx.org@outlook.com",
+    "url": "http://vitx.org"
+  },
+  "contributors": [
+    {
+      "name": "Raúl G. González",
+      "email": "raulggonzalezsw@outlook.com",
+      "url": ""
+    }
+  ],
+  "keywords": [
+    "logger",
+    "logging",
+    "log"
+  ],
+  "bugs": {
+    "url": "https://github.com/vitxorg/vit-logger/issues",
+    "email": "vitx.org@outlook.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vitxorg/vit-logger.git"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-babel": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-mocha-test": "^0.12.7",
+    "justo-assert": "*",
+    "mocha": "^2.2.1"
+  },
+  "preferGlobal": false,
+  "main": "lib/index.js",
+  "bin": {}
+}
