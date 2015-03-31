@@ -52,23 +52,6 @@ describe("ConsoleWriter", function() {
 		});
 	});
 	
-	describe("#format()", function() {
-		it("format(entry) - %l [%t]: %m", function() {
-			var writer = new ConsoleWriter("%l [%t]: %m");
-			writer.format(entry).must.be.equal("INFO [2015-03-30 18:53:45]: My message");
-		});
-		
-		it("format(entry) - %l: %m", function() {
-			var writer = new ConsoleWriter("%l: %m");
-			writer.format(entry).must.be.equal("INFO: My message");
-		});
-		
-		it("format(entry) - %l %s [%t]: %m", function() {
-			var writer = new ConsoleWriter("%l %s [%t]: %m");
-			writer.format(entry).must.be.equal("INFO app [2015-03-30 18:53:45]: My message");
-		});
-	});
-	
 	describe("#write()", function() {
 		var writer, console;
 		

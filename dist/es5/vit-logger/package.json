@@ -1,6 +1,6 @@
 {
   "name": "vit-logger",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A simple logger for JavaScript.",
   "homepage": "https://github.com/vitxorg/vit-logger",
   "license": "MIT",

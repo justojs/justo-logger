@@ -173,7 +173,35 @@ level. Right now, we can use the following colors:
 - white
 - yellow
 
+### FileWriter
+
+A `FileWriter` writes in a file. It can be synchronous or asynchronous.
+
+Constructors:
+
+```
+new FileWriter(dirPath, fileName)
+new FileWriter(dirPath, fileName, options)
+new FileWriter(pattern, dirPath, fileName)
+new FileWriter(pattern, dirPath, fileName, options)
+```
+
+The `pattern` parameter indicates the format pattern. `dirPath` and `fileName` indicate the
+directory path and file name, respectively. And the `options` parameter contains writer options:
+
+- `sync` (Boolean). Is it synchronous? Default: false.
+
+Example:
+
+```
+//synchronous writer
+logger.onWrite(new FileWriter(os.tmpdir(), "my.log", {sync: true});
+
+//asynchrnous writer
+logger.onWrite(new FileWriter(os.tmpdir(), "my.log");
+```
+
 ## TODO
 
-- File writers.
+- Rolling file writers.
 - Database writers.

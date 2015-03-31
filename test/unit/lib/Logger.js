@@ -77,7 +77,7 @@ describe("Logger", function() {
 		});
 	});
 	
-	describe.only("Dynamic reconfiguration", function() {
+	describe("Dynamic reconfiguration", function() {
 		var logger;
 		
 		beforeEach(function() {
