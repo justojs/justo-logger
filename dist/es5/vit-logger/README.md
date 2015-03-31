@@ -195,10 +195,10 @@ Example:
 
 ```
 //synchronous writer
-logger.onWrite(new FileWriter(os.tmpdir(), "my.log", {sync: true});
+logger.onWrite(new FileWriter(os.tmpdir(), "my.log", {sync: true}));
 
 //asynchrnous writer
-logger.onWrite(new FileWriter(os.tmpdir(), "my.log");
+logger.onWrite(new FileWriter(os.tmpdir(), "my.log"));
 ```
 
 ## TODO
