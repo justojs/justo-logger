@@ -14,7 +14,11 @@ module.exports = function (grunt) {
 
       es5: {
         files: {
-          
+          "build/es5/lib/Level.js": "lib/Level.js",
+          "build/es5/lib/LogEntry.js": "lib/LogEntry.js",
+          "build/es5/lib/Logger.js": "lib/Logger.js",
+          "build/es5/lib/Painter.js": "lib/Painter.js",
+          "build/es5/lib/Writer.js": "lib/Writer.js"
         }
       }
     },
@@ -76,14 +80,15 @@ module.exports = function (grunt) {
           quiet: false,
           reporter: "spec",
           require: [
-            "justo-assert",
-            "util"
+            "assert",
+            "sinon",
+            "justo-assert"
           ],
           timeout: 1500
         },
 
         src: [
-          "test/unit/main.js",
+          "test/unit/init.js",
           "test/unit/**/*.js",
         ]
       }
