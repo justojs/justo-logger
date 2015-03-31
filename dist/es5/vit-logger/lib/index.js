@@ -82,8 +82,8 @@ Object.defineProperty(exports, "__esModule", {
  * 
  * @readonly parent:Logger	The parent logger.
  * @readonly name:string		The logger name.
- * @readonly minLevel:Level	The minimum level to write.
- * @readonly maxLevel:Level	The maximum level to write.
+ * @attr minLevel:Level			The minimum level to write.
+ * @attr maxLevel:Level			The maximum level to write.
  */
 
 var Logger = exports.Logger = (function () {
@@ -132,8 +132,8 @@ var Logger = exports.Logger = (function () {
 		//(2) init
 		Object.defineProperty(this, "parent", { value: parent, enumerable: true });
 		Object.defineProperty(this, "name", { value: name, enumerable: true });
-		Object.defineProperty(this, "minLevel", { value: config.minLevel || Level.INFO, enumerable: true });
-		Object.defineProperty(this, "maxLevel", { value: config.maxLevel || Level.FATAL, enumerable: true });
+		Object.defineProperty(this, "minLevel", { value: config.minLevel || Level.INFO, enumerable: true, writable: true });
+		Object.defineProperty(this, "maxLevel", { value: config.maxLevel || Level.FATAL, enumerable: true, writable: true });
 		Object.defineProperty(this, "writers", { value: [] });
 	}
 

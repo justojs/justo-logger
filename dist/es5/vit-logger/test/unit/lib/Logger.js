@@ -1,8 +1,9 @@
 //imports
 const assert = require("assert");
 const sinon = require("sinon");
-const log = require("vit-logger");
-const Logger = log.Logger;
+const vlog = require("vit-logger");
+const Logger = vlog.Logger;
+const Level = vlog.Level;
 
 //suite
 describe("Logger", function() {
@@ -22,18 +23,18 @@ describe("Logger", function() {
 				assert(logger.parent === undefined);
 				logger.name.must.be.equal("test");
 				logger.qn.must.be.equal("test");
-				logger.minLevel.must.be.equal(log.Level.INFO);
-				logger.maxLevel.must.be.equal(log.Level.FATAL);
+				logger.minLevel.must.be.equal(Level.INFO);
+				logger.maxLevel.must.be.equal(Level.FATAL);
 			});
 			
 			it("new Logger(name, config)", function() {
-				var logger = new Logger("test", {minLevel: log.Level.DEBUG, maxLevel: log.Level.INFO});
+				var logger = new Logger("test", {minLevel: Level.DEBUG, maxLevel: Level.INFO});
 				
 				assert(logger.parent === undefined);
 				logger.name.must.be.equal("test");
 				logger.qn.must.be.equal("test");
-				logger.minLevel.must.be.equal(log.Level.DEBUG);
-				logger.maxLevel.must.be.equal(log.Level.INFO);
+				logger.minLevel.must.be.equal(Level.DEBUG);
+				logger.maxLevel.must.be.equal(Level.INFO);
 			});
 		});
 	});
@@ -60,19 +61,37 @@ describe("Logger", function() {
 				logger.parent.must.be.same(one);
 				logger.name.must.be.equal("two");
 				logger.qn.must.be.equal("one.two");
-				logger.minLevel.must.be.equal(log.Level.INFO);
-				logger.maxLevel.must.be.equal(log.Level.FATAL);
+				logger.minLevel.must.be.equal(Level.INFO);
+				logger.maxLevel.must.be.equal(Level.FATAL);
 			});
 			
 			it("new Logger(parent, name, config)", function() {
-				var logger = new Logger(one, "two", {minLevel: log.Level.DEBUG, maxLevel: log.Level.ERROR});
+				var logger = new Logger(one, "two", {minLevel: Level.DEBUG, maxLevel: Level.ERROR});
 				
 				logger.parent.must.be.same(one);
 				logger.name.must.be.equal("two");
 				logger.qn.must.be.equal("one.two");
-				logger.minLevel.must.be.equal(log.Level.DEBUG);
-				logger.maxLevel.must.be.equal(log.Level.ERROR);
+				logger.minLevel.must.be.equal(Level.DEBUG);
+				logger.maxLevel.must.be.equal(Level.ERROR);
 			});
+		});
+	});
+	
+	describe.only("Dynamic reconfiguration", function() {
+		var logger;
+		
+		beforeEach(function() {
+			logger = new Logger("app");
+		});
+		
+		it("#minLevel", function() {
+			logger.minLevel = Level.DEBUG;
+			logger.minLevel.must.be.equal(Level.DEBUG);
+		});
+		
+		it("#maxLevel", function() {
+			logger.maxLevel = Level.ERROR;
+			logger.maxLevel.must.be.equal(Level.ERROR);
 		});
 	});
 	
@@ -101,7 +120,7 @@ describe("Logger", function() {
 		describe("#debug()", function() {
 			describe("minLevel >= DEBUG", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.DEBUG});
+					logger = new Logger("one", {minLevel: Level.DEBUG});
 					writer = sinon.spy();
 				});
 				
@@ -131,7 +150,7 @@ describe("Logger", function() {
 		
 			describe("minLevel > DEBUG", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.INFO});
+					logger = new Logger("one", {minLevel: Level.INFO});
 					writer = sinon.spy();
 				});
 				
@@ -163,7 +182,7 @@ describe("Logger", function() {
 		describe("#info()", function() {
 			describe("minLevel >= INFO", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.INFO});
+					logger = new Logger("one", {minLevel: Level.INFO});
 					writer = sinon.spy();
 				});
 				
@@ -193,7 +212,7 @@ describe("Logger", function() {
 		
 			describe("minLevel > INFO", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.WARN});
+					logger = new Logger("one", {minLevel: Level.WARN});
 					writer = sinon.spy();
 				});
 				
@@ -225,7 +244,7 @@ describe("Logger", function() {
 		describe("#warn()", function() {
 			describe("minLevel >= WARN", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.WARN});
+					logger = new Logger("one", {minLevel: Level.WARN});
 					writer = sinon.spy();
 				});
 				
@@ -255,7 +274,7 @@ describe("Logger", function() {
 		
 			describe("minLevel > WARN", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.ERROR});
+					logger = new Logger("one", {minLevel: Level.ERROR});
 					writer = sinon.spy();
 				});
 				
@@ -287,7 +306,7 @@ describe("Logger", function() {
 		describe("#error()", function() {
 			describe("minLevel >= ERROR", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.ERROR});
+					logger = new Logger("one", {minLevel: Level.ERROR});
 					writer = sinon.spy();
 				});
 				
@@ -317,7 +336,7 @@ describe("Logger", function() {
 		
 			describe("minLevel > ERROR", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.FATAL});
+					logger = new Logger("one", {minLevel: Level.FATAL});
 					writer = sinon.spy();
 				});
 				
@@ -349,7 +368,7 @@ describe("Logger", function() {
 		describe("#fatal()", function() {
 			describe("minLevel >= FATAL", function() {
 				beforeEach(function() {
-					logger = new Logger("one", {minLevel: log.Level.FATAL});
+					logger = new Logger("one", {minLevel: Level.FATAL});
 					writer = sinon.spy();
 				});
 				
