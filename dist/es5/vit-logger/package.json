@@ -1,13 +1,13 @@
 {
   "name": "vit-logger",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A simple logger for JavaScript.",
   "homepage": "https://github.com/vitxorg/vit-logger",
   "license": "MIT",
   "author": {
     "name": "VITx",
     "email": "vitx.org@outlook.com",
-    "url": "http://vitx.org"
+    "url": "http://www.vitx.org"
   },
   "contributors": [
     {
@@ -35,7 +35,9 @@
   "dependencies": {
     "colors": "^1.0.3"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+  
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-babel": "*",
@@ -53,6 +55,5 @@
   "files": [
     "lib",
     "test"
-  ],
-  "bin": {}
+  ]
 }

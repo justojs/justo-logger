@@ -109,6 +109,16 @@ using the `Logger.onWrite()` method. For example:
 logger.onWrite(new ConsoleWriter());
 ``` 
 
+### Namespace
+
+The writers have their own namespace into the `vit-logger` library, the `writer` property.
+Example:
+
+```
+const vlog = require("vit-logger");
+const ConsoleWriter = vlog.writer.ConsoleWriter;
+``` 
+
 ### Format pattern
 
 The writer has associated a pattern that formats the output. This pattern is a string that can
@@ -121,7 +131,7 @@ use the following wildcards:
 
 The default pattern is `%l [%t]: %m`.
 
-### ConsoleWriter
+### writer.ConsoleWriter
 
 The `ConsoleWriter` writes the log entries in the console. Constructors:
 
@@ -132,7 +142,7 @@ new ConsoleWriter(pattern : string)
 
 The writer writes the DEBUG and INFO entries using `console.log()`, while the other levels with `console.error()`.
 
-### ColoredConsoleWriter
+### writer.ColoredConsoleWriter
 
 The `ColoredConsoleWriter` is similar to `ConsoleWriter` but always uses `console.log()`, but writes
 the message with colors.
@@ -173,7 +183,7 @@ level. Right now, we can use the following colors:
 - white
 - yellow
 
-### FileWriter
+### writer.FileWriter
 
 A `FileWriter` writes in a file. It can be synchronous or asynchronous.
 

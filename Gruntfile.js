@@ -17,9 +17,10 @@ module.exports = function (grunt) {
           "build/es5/lib/Level.js": "lib/Level.js",
           "build/es5/lib/LogEntry.js": "lib/LogEntry.js",
           "build/es5/lib/Logger.js": "lib/Logger.js",
-          "build/es5/lib/Painter.js": "lib/Painter.js",
           "build/es5/lib/Writer.js": "lib/Writer.js",
+          "build/es5/lib/writer/main.js": "lib/writer/main.js",
           "build/es5/lib/writer/ConsoleWriter.js": "lib/writer/ConsoleWriter.js",
+          "build/es5/lib/writer/ColoredConsoleWriter.js": "lib/writer/ColoredConsoleWriter.js",
           "build/es5/lib/writer/FileWriter.js": "lib/writer/FileWriter.js"
         }
       }
@@ -37,7 +38,7 @@ module.exports = function (grunt) {
       },
 
       es5: {
-        src: ["build/es5/**"],
+        src: ["build/es5/lib/*.js", "build/es5/lib/writer/main.js"],
         dest: "dist/es5/<%= pkg.name %>/lib/index.js"
       }
     },
@@ -46,7 +47,8 @@ module.exports = function (grunt) {
     	es5: {
     		files: [
     		  {src: ["package.json", "README.md"], dest: "dist/es5/<%= pkg.name %>/", expand: true},
-    		  {src: ["test/**/*.*"], dest: "dist/es5/<%= pkg.name %>", expand: true}
+    		  {src: ["test/**/*.*"], dest: "dist/es5/<%= pkg.name %>/", expand: true},
+    		  {cwd: "build/es5/lib/writer/", src: ["*.*", "!main.js"], dest: "dist/es5/<%= pkg.name %>/lib/writer", expand: true}
     		]
     	}
     },

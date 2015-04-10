@@ -2,12 +2,12 @@
 const os = require("os");
 const fs = require("fs");
 const vlog = require("vit-logger");
-const FileWriter = vlog.FileWriter;
+const FileWriter = require("vit-logger").writer.FileWriter;
 const LogEntry = vlog.LogEntry;
 const Level = vlog.Level;
 
 //suite
-describe("FileWriter", function() {
+describe("writer.FileWriter", function() {
 	const TMP_DIR = os.tmpdir();
 	const FILE_NAME = "test.log";
 	var logger, entry, entry2;

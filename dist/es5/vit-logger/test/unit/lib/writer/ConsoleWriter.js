@@ -2,12 +2,12 @@
 const sinon = require("sinon");
 const vlog = require("vit-logger");
 const Writer = vlog.Writer;
-const ConsoleWriter = vlog.ConsoleWriter;
+const ConsoleWriter = require("vit-logger").writer.ConsoleWriter;
 const LogEntry = vlog.LogEntry;
 const Level = vlog.Level;
 
 //suite
-describe("ConsoleWriter", function() {
+describe("writer.ConsoleWriter", function() {
 	var logger, entry, debugEntry, infoEntry, warnEntry, errorEntry, fatalEntry;
 	
 	beforeEach(function() {

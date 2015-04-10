@@ -2,12 +2,12 @@
 const sinon = require("sinon");
 const vlog = require("vit-logger");
 const Writer = vlog.Writer;
-const ColoredConsoleWriter = vlog.ColoredConsoleWriter;
+const ColoredConsoleWriter = require("vit-logger").writer.ColoredConsoleWriter;
 const LogEntry = vlog.LogEntry;
 const Level = vlog.Level;
 
 //suite
-describe("ColoredConsoleWriter", function() {
+describe("writer.ColoredConsoleWriter", function() {
 	const DEFAULT_PATTERN = Writer.DEFAULT_PATTERN;
 	const DEFAULT_THEME = ColoredConsoleWriter.DEFAULT_THEME;
 	var logger, entry, debugEntry, infoEntry, warnEntry, errorEntry, fatalEntry;
