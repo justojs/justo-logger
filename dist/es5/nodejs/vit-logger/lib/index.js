@@ -388,6 +388,8 @@ Object.defineProperty(exports, "__esModule", {
 var writer = Object.defineProperties({}, {
   ConsoleWriter: {
     get: function () {
+      "use strict";
+
       return require("./writer/ConsoleWriter").ConsoleWriter;
     },
     configurable: true,
@@ -395,6 +397,8 @@ var writer = Object.defineProperties({}, {
   },
   ColoredConsoleWriter: {
     get: function () {
+      "use strict";
+
       return require("./writer/ColoredConsoleWriter").ColoredConsoleWriter;
     },
     configurable: true,
@@ -402,6 +406,8 @@ var writer = Object.defineProperties({}, {
   },
   FileWriter: {
     get: function () {
+      "use strict";
+
       return require("./writer/FileWriter").FileWriter;
     },
     configurable: true,
@@ -409,6 +415,8 @@ var writer = Object.defineProperties({}, {
   },
   RollingFileWriter: {
     get: function () {
+      "use strict";
+
       return require("./writer/RollingFileWriter").RollingFileWriter;
     },
     configurable: true,

@@ -133,7 +133,7 @@ The default pattern is `%l [%t]: %m`.
 
 ### Console writers
 
-The library implements two writers for writing in console: `ConsoleWriter` and `ColoredConsoleWriter`.
+The library implements two writers for console: `ConsoleWriter` and `ColoredConsoleWriter`.
 
 #### writer.ConsoleWriter
 
@@ -198,10 +198,10 @@ A `FileWriter` writes in a file. It can be synchronous or asynchronous.
 Constructors:
 
 ```
-new FileWriter(dirPath, fileName)
-new FileWriter(dirPath, fileName, options)
-new FileWriter(pattern, dirPath, fileName)
-new FileWriter(pattern, dirPath, fileName, options)
+new FileWriter(dirPath : string, fileName : string)
+new FileWriter(dirPath : string, fileName : string, options : object)
+new FileWriter(pattern : string, dirPath : string, fileName : string)
+new FileWriter(pattern : string, dirPath : string, fileName : string, options : object)
 ```
 
 The `pattern` parameter indicates the format pattern. `dirPath` and `fileName` indicate the
@@ -230,10 +230,10 @@ This type of writer is always synchronous.
 Constructors:
 
 ```
-new FileWriter(dirPath, fileName)
-new FileWriter(dirPath, fileName, options)
-new FileWriter(pattern, dirPath, fileName)
-new FileWriter(pattern, dirPath, fileName, options)
+new FileWriter(dirPath : string, fileName : string)
+new FileWriter(dirPath : string, fileName : string, options : object)
+new FileWriter(pattern : string, dirPath : string, fileName : string)
+new FileWriter(pattern : string, dirPath : string, fileName : string, options : object)
 ```
 
 The `pattern` parameter indicates the format pattern. `dirPath` and `fileName` indicate the

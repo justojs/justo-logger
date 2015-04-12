@@ -18,7 +18,8 @@ module.exports = function (grunt) {
           "build/es5/lib/LogEntry.js": "lib/LogEntry.js",
           "build/es5/lib/Logger.js": "lib/Logger.js",
           "build/es5/lib/Writer.js": "lib/Writer.js",
-          "build/es5/lib/writer/main.js": "lib/writer/main.js",
+          "build/es5/lib/writer/main_nodejs.js": "lib/writer/main_nodejs.js",
+          "build/es5/lib/writer/main_browser.js": "lib/writer/main_browser.js",
           "build/es5/lib/writer/ConsoleWriter.js": "lib/writer/ConsoleWriter.js",
           "build/es5/lib/writer/ColoredConsoleWriter.js": "lib/writer/ColoredConsoleWriter.js",
           "build/es5/lib/writer/FileWriter.js": "lib/writer/FileWriter.js",
@@ -38,18 +39,33 @@ module.exports = function (grunt) {
         separator: "\n\n"
       },
 
-      es5: {
-        src: ["build/es5/lib/*.js", "build/es5/lib/writer/main.js"],
-        dest: "dist/es5/<%= pkg.name %>/lib/index.js"
+      nodejs: {
+        src: ["build/es5/lib/*.js", "build/es5/lib/writer/main_nodejs.js"],
+        dest: "dist/es5/nodejs/<%= pkg.name %>/lib/index.js"
+      },
+      
+      browser: {
+      	options: {
+      		process: function(src, filepath) {
+      			if (/ConsoleWriter.js$/.test(filepath)) {
+       				src = src.replace(/\/\/imports\n(var .*;\n)*/, "");
+       			}
+       			
+       			return src;
+      		}
+      	},
+      	
+      	src: ["build/es/lib/*.js", "build/es5/lib/writer/main_browser.js", "build/es5/lib/writer/ConsoleWriter.js"],
+      	dest: "dist/es5/browser/<%= pkg.name %>/lib/index.js"
       }
     },
     
     copy: {
-    	es5: {
+    	nodejs: {
     		files: [
-    		  {src: ["package.json", "README.md"], dest: "dist/es5/<%= pkg.name %>/", expand: true},
-    		  {src: ["test/**/*.*"], dest: "dist/es5/<%= pkg.name %>/", expand: true},
-    		  {cwd: "build/es5/lib/writer/", src: ["*.*", "!main.js"], dest: "dist/es5/<%= pkg.name %>/lib/writer", expand: true}
+    		  {src: ["package.json", "README.md"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
+    		  {src: ["test/**/*.*"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
+    		  {cwd: "build/es5/lib/writer/", src: ["*.*", "!main_*.js"], dest: "dist/es5/nodejs/<%= pkg.name %>/lib/writer", expand: true}
     		]
     	}
     },
@@ -69,6 +85,8 @@ module.exports = function (grunt) {
 
       test: {
         options: {
+        	jshintrc: true,
+        	
           ignores: [
             "test/**/mocha.opts"
           ]
@@ -79,7 +97,7 @@ module.exports = function (grunt) {
     },
 
     mochaTest:{
-      es5: {
+      nodejs: {
         options: {
           ignoreLeaks: false,
           quiet: false,
@@ -109,8 +127,16 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-mocha-test");
   
   //(3) definne tasks and alias
-  grunt.registerTask("buildes5", ["clean:es5", "babel:es5", "concat:es5", "copy:es5"]);
-  grunt.registerTask("es5", ["buildes5", "mochaTest:es5"]);
+  grunt.registerTask("buildes5", [
+    "jshint",
+    "clean:es5",
+    "babel:es5",
+    "concat:nodejs",
+    "concat:browser",
+    "copy:nodejs"
+  ]);
+  
+  grunt.registerTask("es5", ["buildes5", "mochaTest:nodejs"]);
 
   //(4) define default task
   grunt.registerTask("default", []);

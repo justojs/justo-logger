@@ -12,7 +12,7 @@ describe("Logger", function() {
 			describe("Error handling", function() {
 				it("new Logger()", function() {
 					(function() {
-						new Logger();
+						var logger = new Logger();
 					}).must.raise("The logger must have a name.");
 				});
 			});
@@ -50,7 +50,7 @@ describe("Logger", function() {
 			describe("Error handling", function() {
 				it("new Logger(parent)", function() {
 					(function() {
-						new Logger(one);
+						var logger = new Logger(one);
 					}).must.raise("The logger must have a name.");
 				});
 			});
