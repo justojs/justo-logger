@@ -1,6 +1,6 @@
 # vit-logger
 
-A simple logger for JavaScript.
+A simple logger for Node.js and browsers.
 
 Proudly developed in JavaScript (ES6) from Valencia, Spain.
 
@@ -131,7 +131,11 @@ use the following wildcards:
 
 The default pattern is `%l [%t]: %m`.
 
-### writer.ConsoleWriter
+### Console writers
+
+The library implements two writers for writing in console: `ConsoleWriter` and `ColoredConsoleWriter`.
+
+#### writer.ConsoleWriter
 
 The `ConsoleWriter` writes the log entries in the console. Constructors:
 
@@ -142,7 +146,7 @@ new ConsoleWriter(pattern : string)
 
 The writer writes the DEBUG and INFO entries using `console.log()`, while the other levels with `console.error()`.
 
-### writer.ColoredConsoleWriter
+#### writer.ColoredConsoleWriter
 
 The `ColoredConsoleWriter` is similar to `ConsoleWriter` but always uses `console.log()`, but writes
 the message with colors.
@@ -183,7 +187,11 @@ level. Right now, we can use the following colors:
 - white
 - yellow
 
-### writer.FileWriter
+### File writers
+
+The library contains two writers for writing in log files: `FileWriter` and `RollingFileWriter`.
+
+#### writer.FileWriter
 
 A `FileWriter` writes in a file. It can be synchronous or asynchronous.
 
@@ -200,6 +208,7 @@ The `pattern` parameter indicates the format pattern. `dirPath` and `fileName` i
 directory path and file name, respectively. And the `options` parameter contains writer options:
 
 - `sync` (Boolean). Is it synchronous? Default: false.
+- `batch` (Number). The batch size. Default: 1.
 
 Example:
 
@@ -211,7 +220,38 @@ logger.onWrite(new FileWriter(os.tmpdir(), "my.log", {sync: true}));
 logger.onWrite(new FileWriter(os.tmpdir(), "my.log"));
 ```
 
+#### writer.RollingFileWriter
+
+A `RollingFileWriter` is similar to `FileWriter`, but also to archive the log file when it reaches
+a certain size automatically.
+
+This type of writer is always synchronous.
+
+Constructors:
+
+```
+new FileWriter(dirPath, fileName)
+new FileWriter(dirPath, fileName, options)
+new FileWriter(pattern, dirPath, fileName)
+new FileWriter(pattern, dirPath, fileName, options)
+```
+
+The `pattern` parameter indicates the format pattern. `dirPath` and `fileName` indicate the
+directory path and file name, respectively. And the `options` parameter contains writer options:
+
+- `batch` (Number). The batch size. Default: 1.
+- `maxSize` (Number). The maximum size, in bytes, that the file can reach.
+- `maxArchives` (Number). The maximum number of archives that the writer must maintain.
+
+#### Batch mode
+
+The file writers can be configured for writing entries in batch. The config option `batch` allows
+to configure the size. For example, when we set the batch size to 20, the writer will buffer the entries until the
+size is reached. There is only one exception, if we register an entry with a log level greater than or equal to WARN,
+the writing trigger is issued, without reaching the batch size.
+
+The batch mode reduces the disk I/O. 
+
 ## TODO
 
-- Rolling file writers.
 - Database writers.

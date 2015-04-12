@@ -406,6 +406,13 @@ var writer = Object.defineProperties({}, {
     },
     configurable: true,
     enumerable: true
+  },
+  RollingFileWriter: {
+    get: function () {
+      return require("./writer/RollingFileWriter").RollingFileWriter;
+    },
+    configurable: true,
+    enumerable: true
   }
 });
 exports.writer = writer;

@@ -21,7 +21,8 @@ module.exports = function (grunt) {
           "build/es5/lib/writer/main.js": "lib/writer/main.js",
           "build/es5/lib/writer/ConsoleWriter.js": "lib/writer/ConsoleWriter.js",
           "build/es5/lib/writer/ColoredConsoleWriter.js": "lib/writer/ColoredConsoleWriter.js",
-          "build/es5/lib/writer/FileWriter.js": "lib/writer/FileWriter.js"
+          "build/es5/lib/writer/FileWriter.js": "lib/writer/FileWriter.js",
+          "build/es5/lib/writer/RollingFileWriter.js": "lib/writer/RollingFileWriter.js"
         }
       }
     },
@@ -88,7 +89,7 @@ module.exports = function (grunt) {
             "sinon",
             "justo-assert"
           ],
-          timeout: 1500
+          timeout: 3000
         },
 
         src: [

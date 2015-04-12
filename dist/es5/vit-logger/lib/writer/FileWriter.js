@@ -16,7 +16,9 @@ Object.defineProperty(exports, "__esModule", {
 //imports
 var fs = require("fs");
 var path = require("path");
-var Writer = require("vit-logger").Writer;
+var vlog = require("vit-logger");
+var Writer = vlog.Writer;
+var Level = vlog.Level;
 
 /**
  * A file writer.
@@ -24,6 +26,9 @@ var Writer = require("vit-logger").Writer;
  * @readonly dirPath:string							The directory.
  * @readonly fileName:string						The file name.
  * @readonly synchronous:boolean				Is it synchrnous?
+ * @readonly batch:number								The batch size.
+ * @readonly(private) trigger:Level			The batch level trigger.
+ * @readonly(private) buffer:Entry[]		The entries for writing.
  * @readonly(private) encoding:string		The encoding.
  * @readonly(private) mode:number				The file mode.
  * @readonly(private) opOptions:object	The append options.
@@ -36,13 +41,13 @@ var FileWriter = exports.FileWriter = (function (_Writer) {
   * @overload
   * @param(attr) dirPath		
   * @param(attr) fileName
-  * @param [opts]:object			The writer options: sync.
+  * @param [opts]:object			The writer options: sync and batch.
   * 
   * @overload
   * @param(attr) pattern
   * @param(attr) dirPath
   * @param(attr) fileName
-  * @param [opts]:object			The writer options: sync.
+  * @param [opts]:object			The writer options: sync and batch.
   */
 
 	function FileWriter() {
@@ -100,6 +105,9 @@ var FileWriter = exports.FileWriter = (function (_Writer) {
 		Object.defineProperty(this, "dirPath", { value: dirPath, enumerable: true });
 		Object.defineProperty(this, "fileName", { value: fileName, enumerable: true });
 		Object.defineProperty(this, "synchronous", { value: !!opts.sync, enumerable: true });
+		Object.defineProperty(this, "batch", { value: opts.batch || FileWriter.DEFAULT_OPTIONS.batch });
+		Object.defineProperty(this, "trigger", { value: Level.WARN });
+		Object.defineProperty(this, "buffer", { value: [] });
 		Object.defineProperty(this, "encoding", { value: FileWriter.DEFAULT_OPTIONS.encoding });
 		Object.defineProperty(this, "mode", { value: FileWriter.DEFAULT_OPTIONS.mode });
 		Object.defineProperty(this, "opOptions", { value: { encoding: this.encoding, mode: this.mode } });
@@ -152,6 +160,26 @@ var FileWriter = exports.FileWriter = (function (_Writer) {
 				return path.join(this.dirPath, this.fileName);
 			}
 		},
+		buildBufferContent: {
+
+			/**
+    * @private
+    */
+
+			value: function buildBufferContent() {
+				var con;
+
+				//(1) build content
+				con = "";
+
+				while (this.buffer.length > 0) {
+					con += this.format(this.buffer.shift()) + "\n";
+				}
+
+				//(2) return
+				return con;
+			}
+		},
 		write: {
 
 			/**
@@ -159,19 +187,55 @@ var FileWriter = exports.FileWriter = (function (_Writer) {
     */
 
 			value: function write(entry) {
-				var line;
+				//(1) push entry
+				this.buffer.push(entry);
 
-				//(1) build line
-				line = this.format(entry) + "\n";
-
-				//(2) append
-				if (this.sync) {
-					fs.appendFileSync(this.filePath, line, this.opOptions);
-				} else {
-					fs.appendFile(this.filePath, line, this.opOptions, function (error) {
-						if (error) throw new Error(error);
-					});
+				//(2) must we write batch buffer?
+				if (entry.level.value >= this.trigger.value || this.buffer.length >= this.batch) {
+					this.writeBuffer();
 				}
+			}
+		},
+		writeBuffer: {
+
+			/**
+    * Writes the buffered entries.
+    * 
+    * @private
+    */
+
+			value: function writeBuffer() {
+				var con = this.buildBufferContent();
+
+				if (this.sync) this.writeSync(con);else this.writeAsync(con);
+			}
+		},
+		writeSync: {
+
+			/**
+    * Writes the specified one, synchronously.
+    * 
+    * @protected
+    * @param con:string	The content to write.
+    */
+
+			value: function writeSync(con) {
+				fs.appendFileSync(this.filePath, con, this.opOptions);
+			}
+		},
+		writeAsync: {
+
+			/**
+    * Writes the batch buffer asynchronously.
+    * 
+    * @protected
+    * @param con:string	The content to write.
+    */
+
+			value: function writeAsync(con) {
+				fs.appendFile(this.filePath, con, this.opOptions, function (error) {
+					if (error) throw new Error(error);
+				});
 			}
 		}
 	});
@@ -182,6 +246,7 @@ var FileWriter = exports.FileWriter = (function (_Writer) {
 Object.defineProperty(FileWriter, "DEFAULT_OPTIONS", {
 	value: {
 		sync: false,
+		batch: 1,
 		encoding: "utf8",
 		mode: 438
 	}

@@ -1,7 +1,7 @@
 {
   "name": "vit-logger",
   "version": "0.4.0",
-  "description": "A simple logger for JavaScript.",
+  "description": "A simple logger for Node.js and browsers.",
   "homepage": "https://github.com/vitxorg/vit-logger",
   "license": "MIT",
   "author": {
@@ -35,10 +35,9 @@
   "dependencies": {
     "colors": "^1.0.3"
   },
-  "peerDependencies": {
-  
-  },
+  "peerDependencies": {},
   "devDependencies": {
+    "async": "^0.9.0",
     "grunt": "^0.4.5",
     "grunt-babel": "*",
     "grunt-contrib-clean": "*",
