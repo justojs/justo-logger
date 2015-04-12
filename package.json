@@ -17,9 +17,21 @@
     }
   ],
   "keywords": [
+    "log",
+    "Browser log",
+    "JavaScript log",
+    "Node log",
+    "Node.js log",
     "logger",
+    "Browser logger",
+    "JavaScript logger",
+    "Node logger",
+    "Node.js logger",
     "logging",
-    "log"
+    "Browser logging",
+    "JavaScript logging",
+    "Node logging",
+    "Node.js logging"
   ],
   "bugs": {
     "url": "https://github.com/vitxorg/vit-logger/issues",
