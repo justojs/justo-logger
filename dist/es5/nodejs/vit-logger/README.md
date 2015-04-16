@@ -2,7 +2,13 @@
 
 A simple logger for Node.js and browsers.
 
-Proudly developed in JavaScript (ES6) from Valencia, Spain.
+Proudly made in Valencia, Spain, EU.
+
+Features:
+
+- The logger supports several levels: DEBUG, INFO, WARN, ERROR and FATAL.
+- The logger supports several writer: console, colored console, file, rolling file, etc.
+- Each writer can configure its own format pattern.
 
 ## Usage
 
@@ -26,7 +32,7 @@ We have two basic components:
 
 A logger can have zero, one or more writers associated.
 The user must associate the writers to the logger, being the logger which passes the log entries to the writers.
-If we don't associate any writer, nothing will be write. 
+If we don't associate any writer, nothing will be write.
 
 Here's an illustrative example:
 
@@ -44,7 +50,7 @@ logger.fatal("My fatal message");
 ```
 
 The writer will receive the entries INFO, WARN, ERROR and FATAL, but not DEBUG, because we
-have configured the logger to write only the messages with level greater than or equal to INFO. 
+have configured the logger to write only the messages with level greater than or equal to INFO.
 
 ## Logger
 
@@ -86,7 +92,7 @@ The level indicates the importance of the entry, from minor to major:
   continue working.
 - `FATAL`. Fatal error message. Something has gone wrong and the app or component
   can't continue working.
- 
+
 By type of level, we must use the following logger methods:
 
 ```
@@ -107,7 +113,7 @@ using the `Logger.onWrite()` method. For example:
 
 ```
 logger.onWrite(new ConsoleWriter());
-``` 
+```
 
 ### Namespace
 
@@ -117,7 +123,7 @@ Example:
 ```
 const vlog = require("vit-logger");
 const ConsoleWriter = vlog.writer.ConsoleWriter;
-``` 
+```
 
 ### Format pattern
 
@@ -250,7 +256,7 @@ to configure the size. For example, when we set the batch size to 20, the writer
 size is reached. There is only one exception, if we register an entry with a log level greater than or equal to WARN,
 the writing trigger is issued, without reaching the batch size.
 
-The batch mode reduces the disk I/O. 
+The batch mode reduces the disk I/O.
 
 ## TODO
 
