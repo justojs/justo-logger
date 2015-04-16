@@ -152,6 +152,10 @@ describe("Logger", function() {
 					it("debug(msg)", function() {
 						logger.debug("My message.");
 					});
+
+					it("debug(pattern, param1, param2)", function() {
+						logger.debug("%s %s.", "My", "message");
+					});
 				});
 
 				describe("With writer", function() {

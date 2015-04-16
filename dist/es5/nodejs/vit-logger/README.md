@@ -7,7 +7,11 @@ Proudly made in Valencia, Spain, EU.
 Features:
 
 - The logger supports several levels: DEBUG, INFO, WARN, ERROR and FATAL.
+<<<<<<< HEAD
 - The logger supports several writers: console, colored console, file and rolling file.
+=======
+- The logger supports several writer: console, colored console, file, rolling file, etc.
+>>>>>>> 1db468a5017c0d47157765368c7e51812a84c9db
 - Each writer can configure its own format pattern.
 
 ## Usage
