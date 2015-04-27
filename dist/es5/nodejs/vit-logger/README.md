@@ -7,11 +7,7 @@ Proudly made in Valencia, Spain, EU.
 Features:
 
 - The logger supports several levels: DEBUG, INFO, WARN, ERROR and FATAL.
-<<<<<<< HEAD
 - The logger supports several writers: console, colored console, file and rolling file.
-=======
-- The logger supports several writer: console, colored console, file, rolling file, etc.
->>>>>>> 1db468a5017c0d47157765368c7e51812a84c9db
 - Each writer can configure its own format pattern.
 
 ## Usage
@@ -82,8 +78,8 @@ The `parent` is the parent logger. We can create a hierarchy of loggers, for exa
 the application and one child logger for each component. All loggers must have a `name`. Finally, the
 `config` parameter contains the configuration of the logger:
 
-- `minLevel` (Level). Minimum level to write. Default: `Level.INFO`.
-- `maxLevel` (Level). Maximum level to write. Default: `Level.FATAL`.
+- `minLevel` (Level|string). Minimum level to write. Default: `Level.INFO`.
+- `maxLevel` (Level|string). Maximum level to write. Default: `Level.FATAL`.
 
 ### Level
 
@@ -112,6 +108,18 @@ The messages can be specified passing several arguments, which will be formated 
 
 ```
 logger.debug("The user '%s' has been '%s'.", user.username, user.status);
+```
+
+#### Min level and max level
+
+The logger can be configured indicating the minimum level and maximum level
+to write using the properties `minLevel` and `maxLevel`. We can use a `Level`
+item or a string:
+
+```
+logger.minLevel = "info";
+logger.minLevel = "INFO";
+logger.minLevel = Level.INFO;
 ```
 
 ## Writers

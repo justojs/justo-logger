@@ -66,6 +66,8 @@ function LogEntry(source, level, timestamp, message) {
 
 "use strict";
 
+var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) { _arr.push(_step.value); if (i && _arr.length === i) break; } return _arr; } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } };
+
 var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -73,7 +75,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 //imports
 var util = require("util");
@@ -81,262 +83,299 @@ var util = require("util");
 /**
  * A logger.
  *
- * @readonly parent:Logger	The parent logger.
- * @readonly name:string		The logger name.
- * @attr minLevel:Level			The minimum level to write.
- * @attr maxLevel:Level			The maximum level to write.
+ * @readonly parent:Logger  The parent logger.
+ * @readonly name:string    The logger name.
+ * @attr minLevel:Level     The minimum level to write.
+ * @attr maxLevel:Level     The maximum level to write.
  */
 
 var Logger = exports.Logger = (function () {
-	/**
-  * Constructor.
-  *
-  * @overload
-  * @param(attr) name
-  * @param [config]:object	The logger options: minLevel and maxLevel.
-  *
-  * @overload
-  * @param(attr) parent
-  * @param(attr) name
-  * @param [config]:object	The logger options: minLevel and maxLevel.
-  */
+  /**
+   * Constructor.
+   *
+   * @overload
+   * @param(attr) name
+   * @param [config]:object  The logger options: minLevel and maxLevel.
+   *
+   * @overload
+   * @param(attr) parent
+   * @param(attr) name
+   * @param [config]:object  The logger options: minLevel and maxLevel.
+   */
 
-	function Logger() {
-		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-			args[_key] = arguments[_key];
-		}
+  function Logger() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-		_classCallCheck(this, Logger);
+    _classCallCheck(this, Logger);
 
-		var parent, name, config;
+    var parent, name, config, minLevel, maxLevel;
 
-		//(1) pre: arguments
-		if (args.length == 1 && typeof args[0] == "string") {
-			name = args[0];
-		} else if (args.length == 2) {
-			if (typeof args[0] == "string") {
-				name = args[0];
-				config = args[1];
-			} else {
-				parent = args[0];
-				name = args[1];
-			}
-		} else if (args.length > 2) {
-			parent = args[0];
-			name = args[1];
-			config = args[2];
-		}
+    //(1) pre: arguments
+    if (args.length == 1 && typeof args[0] == "string") {
+      name = args[0];
+    } else if (args.length == 2) {
+      if (typeof args[0] == "string") {
+        var _ref = args;
 
-		if (!name) throw new Error("The logger must have a name.");
-		if (!config) config = {};
+        var _ref2 = _slicedToArray(_ref, 2);
 
-		//(2) init
-		Object.defineProperty(this, "parent", { value: parent, enumerable: true });
-		Object.defineProperty(this, "name", { value: name, enumerable: true });
-		Object.defineProperty(this, "minLevel", { value: config.minLevel || Level.INFO, enumerable: true, writable: true });
-		Object.defineProperty(this, "maxLevel", { value: config.maxLevel || Level.FATAL, enumerable: true, writable: true });
-		Object.defineProperty(this, "writers", { value: [] });
-	}
+        name = _ref2[0];
+        config = _ref2[1];
+      } else {
+        var _ref3 = args;
 
-	_createClass(Logger, {
-		qualifiedName: {
+        var _ref32 = _slicedToArray(_ref3, 2);
 
-			/**
-    * The qualified name.
-    *
-    * @type string
-    */
+        parent = _ref32[0];
+        name = _ref32[1];
+      }
+    } else if (args.length > 2) {
+      var _ref4 = args;
 
-			get: function () {
-				return (this.parent ? this.parent.qualifiedName + "." : "") + this.name;
-			}
-		},
-		qn: {
+      var _ref42 = _slicedToArray(_ref4, 3);
 
-			/**
-    * @alias qualifiedName
-    */
+      parent = _ref42[0];
+      name = _ref42[1];
+      config = _ref42[2];
+    }
 
-			get: function () {
-				return this.qualifiedName;
-			}
-		},
-		write: {
+    if (!name) throw new Error("The logger must have a name.");
+    if (!config) config = {};
 
-			/**
-    * Writes a log entry.
-    *
-    * @protected
-    */
+    //(2) get minLevel and maxLevel
+    minLevel = config.minLevel;
+    if (typeof minLevel == "string") minLevel = Level[minLevel.toUpperCase()];
 
-			value: function write(level, msg) {
-				//(1) pre: arguments
-				if (!level) throw new Error("Level expected.");
-				if (!msg) throw new Error("Message expected.");
+    maxLevel = config.maxLevel;
+    if (typeof maxLevel == "string") maxLevel = Level[maxLevel.toUpperCase()];
 
-				//(2) emit message if needed
-				if (level.value >= this.minLevel.value && level.value <= this.maxLevel.value) {
-					var entry = new LogEntry(this, level, new Date(), msg);
+    //(3) init
+    Object.defineProperty(this, "parent", { value: parent, enumerable: true });
+    Object.defineProperty(this, "name", { value: name, enumerable: true });
+    Object.defineProperty(this, "_minLevel", { value: minLevel || Level.INFO, writable: true });
+    Object.defineProperty(this, "_maxLevel", { value: maxLevel || Level.FATAL, writable: true });
+    Object.defineProperty(this, "writers", { value: [] });
+  }
 
-					for (var i = 0; i < this.writers.length; ++i) {
-						var writer = this.writers[i];
+  _createClass(Logger, {
+    qualifiedName: {
 
-						if (writer instanceof Function) writer(entry);else writer.write(entry);
-					}
-				}
-			}
-		},
-		onWrite: {
+      /**
+       * The qualified name.
+       *
+       * @type string
+       */
 
-			/**
-    * Adds a writer to listen the write event.
-    *
-    * @param writer:Writer	The writer/listener.
-    */
+      get: function () {
+        return (this.parent ? this.parent.qualifiedName + "." : "") + this.name;
+      }
+    },
+    qn: {
 
-			value: function onWrite(writer) {
-				if (!writer) throw new Error("Listener expected.");
+      /**
+       * @alias qualifiedName
+       */
 
-				this.writers.push(writer);
-			}
-		},
-		format: {
+      get: function () {
+        return this.qualifiedName;
+      }
+    },
+    minLevel: {
+      get: function () {
+        return this._minLevel;
+      },
+      set: function (level) {
+        if (typeof level == "string") level = Level[level.toUpperCase()];
+        this._minLevel = level;
+      }
+    },
+    maxLevel: {
+      get: function () {
+        return this._maxLevel;
+      },
+      set: function (level) {
+        if (typeof level == "string") level = Level[level.toUpperCase()];
+        this._maxLevel = level;
+      }
+    },
+    write: {
 
-			/**
-    * Formats the message.
-    *
-    * @private
-    *
-    * @overload
-    * @param msg:string			The message.
-    *
-    * @overload Using util.format() format.
-    * @param format:string		The format pattern.
-    * @param params:object[]	The parameters.
-    */
+      /**
+       * Writes a log entry.
+       *
+       * @protected
+       */
 
-			value: function format() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
+      value: function write(level, msg) {
+        //(1) pre: arguments
+        if (!level) throw new Error("Level expected.");
+        if (!msg) throw new Error("Message expected.");
 
-				var res;
+        //(2) emit message if needed
+        if (level.value >= this.minLevel.value && level.value <= this.maxLevel.value) {
+          var entry = new LogEntry(this, level, new Date(), msg);
 
-				//(1) format
-				if (args.length === 0) res = "";else if (args.length == 1) res = args[0];else res = util.format.apply(util, [args[0]].concat(_toConsumableArray(args.slice(1))));
+          for (var i = 0; i < this.writers.length; ++i) {
+            var writer = this.writers[i];
 
-				//(2) return
-				return res;
-			}
-		},
-		debug: {
+            if (writer instanceof Function) writer(entry);else writer.write(entry);
+          }
+        }
+      }
+    },
+    onWrite: {
 
-			/**
-    * Logs a DEBUG message.
-    *
-    * @overload
-    * @param msg:string			The message.
-    *
-    * @overload Using util.format() format.
-    * @param format:string		The format pattern.
-    * @param params:object[]	The parameters.
-    */
+      /**
+       * Adds a writer to listen the write event.
+       *
+       * @param writer:Writer  The writer/listener.
+       */
 
-			value: function debug() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
+      value: function onWrite(writer) {
+        if (!writer) throw new Error("Listener expected.");
 
-				this.write(Level.DEBUG, this.format.apply(this, args));
-			}
-		},
-		info: {
+        this.writers.push(writer);
+      }
+    },
+    format: {
 
-			/**
-    * Logs an INFO message.
-    *
-     * @overload
-    * @param msg:string			The message.
-    *
-    * @overload Using util.format() format.
-    * @param format:string		The format pattern.
-    * @param params:object[]	The parameters.
-    */
+      /**
+       * Formats the message.
+       *
+       * @private
+       *
+       * @overload
+       * @param msg:string      The message.
+       *
+       * @overload Using util.format() format.
+       * @param format:string    The format pattern.
+       * @param params:object[]  The parameters.
+       */
 
-			value: function info() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
+      value: function format() {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
 
-				this.write(Level.INFO, this.format.apply(this, args));
-			}
-		},
-		warn: {
+        var res;
 
-			/**
-    * Logs a WARN message.
-    *
-    * @overload
-    * @param msg:string			The message.
-    *
-    * @overload Using util.format() format.
-    * @param format:string		The format pattern.
-    * @param params:object[]	The parameters.
-    */
+        //(1) format
+        if (args.length === 0) res = "";else if (args.length == 1) res = args[0];else res = util.format.apply(util, [args[0]].concat(_toConsumableArray(args.slice(1))));
 
-			value: function warn() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
+        //(2) return
+        return res;
+      }
+    },
+    debug: {
 
-				this.write(Level.WARN, this.format.apply(this, args));
-			}
-		},
-		error: {
+      /**
+       * Logs a DEBUG message.
+       *
+       * @overload
+       * @param msg:string      The message.
+       *
+       * @overload Using util.format() format.
+       * @param format:string    The format pattern.
+       * @param params:object[]  The parameters.
+       */
 
-			/**
-    * Logs an ERROR message.
-    *
-    * @overload
-    * @param msg:string			The message.
-    *
-    * @overload Using util.format() format.
-    * @param format:string		The format pattern.
-    * @param params:object[]	The parameters.
-    */
+      value: function debug() {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
 
-			value: function error() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
+        this.write(Level.DEBUG, this.format.apply(this, args));
+      }
+    },
+    info: {
 
-				this.write(Level.ERROR, this.format.apply(this, args));
-			}
-		},
-		fatal: {
+      /**
+       * Logs an INFO message.
+       *
+       * @overload
+       * @param msg:string      The message.
+       *
+       * @overload Using util.format() format.
+       * @param format:string    The format pattern.
+       * @param params:object[]  The parameters.
+       */
 
-			/**
-    * Logs a FATAL message.
-    *
-    * @overload
-    * @param msg:string			The message.
-    *
-    * @overload Using util.format() format.
-    * @param format:string		The format pattern.
-    * @param params:object[]	The parameters.
-    */
+      value: function info() {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
 
-			value: function fatal() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
+        this.write(Level.INFO, this.format.apply(this, args));
+      }
+    },
+    warn: {
 
-				this.write(Level.FATAL, this.format.apply(this, args));
-			}
-		}
-	});
+      /**
+       * Logs a WARN message.
+       *
+       * @overload
+       * @param msg:string      The message.
+       *
+       * @overload Using util.format() format.
+       * @param format:string    The format pattern.
+       * @param params:object[]  The parameters.
+       */
 
-	return Logger;
+      value: function warn() {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        this.write(Level.WARN, this.format.apply(this, args));
+      }
+    },
+    error: {
+
+      /**
+       * Logs an ERROR message.
+       *
+       * @overload
+       * @param msg:string      The message.
+       *
+       * @overload Using util.format() format.
+       * @param format:string    The format pattern.
+       * @param params:object[]  The parameters.
+       */
+
+      value: function error() {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        this.write(Level.ERROR, this.format.apply(this, args));
+      }
+    },
+    fatal: {
+
+      /**
+       * Logs a FATAL message.
+       *
+       * @overload
+       * @param msg:string      The message.
+       *
+       * @overload Using util.format() format.
+       * @param format:string    The format pattern.
+       * @param params:object[]  The parameters.
+       */
+
+      value: function fatal() {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        this.write(Level.FATAL, this.format.apply(this, args));
+      }
+    }
+  });
+
+  return Logger;
 })();
 
 "use strict";
