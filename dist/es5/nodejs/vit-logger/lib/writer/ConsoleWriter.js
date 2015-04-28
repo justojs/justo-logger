@@ -11,7 +11,7 @@ var _inherits = function (subClass, superClass) { if (typeof superClass !== "fun
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 //imports
 var vlog = require("vit-logger");
@@ -20,79 +20,79 @@ var Level = vlog.Level;
 
 /**
  * A console writer.
- * 
- * @readonly console:any	The console object with the log/warn/error methods.
+ *
+ * @readonly console:any  The console object with the log/warn/error methods.
  */
 
 var ConsoleWriter = exports.ConsoleWriter = (function (_Writer) {
-	/**
-  * Constructor.
-  * 
-  * @overload
-  * @noparam
-  * 
-  * @overload
-  * @param(attr) pattern
-  * 
-  * @overload
-  * @param(attr) console
-  * 
-  * @overload
-  * @protected
-  * @param(attr) pattern
-  * @param(attr) console
-  */
+  /**
+   * Constructor.
+   *
+   * @overload
+   * @noparam
+   *
+   * @overload
+   * @param(attr) pattern
+   *
+   * @overload
+   * @param(attr) console
+   *
+   * @overload
+   * @protected
+   * @param(attr) pattern
+   * @param(attr) console
+   */
 
-	function ConsoleWriter() {
-		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-			args[_key] = arguments[_key];
-		}
+  function ConsoleWriter() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-		_classCallCheck(this, ConsoleWriter);
+    _classCallCheck(this, ConsoleWriter);
 
-		var pat, con;
+    var pat, con;
 
-		//(1) pre: arguments
-		if (args.length == 1) {
-			if (typeof args[0] == "string") pat = args[0];else con = args[0];
-		} else if (args.length > 1) {
-			var _ref = args;
+    //(1) pre: arguments
+    if (args.length == 1) {
+      if (typeof args[0] == "string") pat = args[0];else con = args[0];
+    } else if (args.length > 1) {
+      var _ref = args;
 
-			var _ref2 = _slicedToArray(_ref, 2);
+      var _ref2 = _slicedToArray(_ref, 2);
 
-			pat = _ref2[0];
-			con = _ref2[1];
-		}
+      pat = _ref2[0];
+      con = _ref2[1];
+    }
 
-		if (!con) con = console;
+    if (!con) con = console;
 
-		//(2) superconstructor
-		_get(Object.getPrototypeOf(ConsoleWriter.prototype), "constructor", this).call(this, pat);
+    //(2) superconstructor
+    _get(Object.getPrototypeOf(ConsoleWriter.prototype), "constructor", this).call(this, pat);
 
-		//(3) init
-		Object.defineProperty(this, "console", { value: con, enumerable: true });
-	}
+    //(3) init
+    Object.defineProperty(this, "console", { value: con, enumerable: true });
+  }
 
-	_inherits(ConsoleWriter, _Writer);
+  _inherits(ConsoleWriter, _Writer);
 
-	_createClass(ConsoleWriter, {
-		write: {
+  _createClass(ConsoleWriter, {
+    write: {
 
-			/**
-    * @override
-    */
+      /**
+       * @override
+       */
 
-			value: function write(entry) {
-				var print;
+      value: function write(entry) {
+        var print;
 
-				//(1) get print() function
-				if (entry.level == Level.DEBUG || entry.level == Level.INFO) print = this.console.log;else if (entry.level == Level.WARN) print = this.console.error;else print = this.console.error;
+        //(1) get print() function
+        if (entry.level == Level.DEBUG || entry.level == Level.INFO) print = this.console.log;else if (entry.level == Level.WARN) print = this.console.error;else print = this.console.error;
 
-				//(2) print
-				print(this.format(entry));
-			}
-		}
-	});
+        //(2) print
+        print(this.format(entry));
+      }
+    }
+  });
 
-	return ConsoleWriter;
+  return ConsoleWriter;
 })(Writer);

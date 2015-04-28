@@ -1,12 +1,21 @@
 //imports
 const assert = require("assert");
-const sinon = require("sinon");
+const dummy = require("justo-double").dummy;
+const spy = require("justo-double").spy;
 const vlog = require("vit-logger");
 const Logger = vlog.Logger;
 const Level = vlog.Level;
 
 //suite
 describe("Logger", function() {
+  function DummyWriter() {
+
+  }
+
+  DummyWriter.prototype.write = function() {
+
+  };
+
   describe("Root logger", function() {
     describe("#constructor", function() {
       describe("Error handling", function() {
@@ -142,7 +151,7 @@ describe("Logger", function() {
     var logger, writer;
 
     describe("#format()", function() {
-      before(function() {
+      beforeEach(function() {
         logger = new Logger("one");
       });
 
@@ -163,7 +172,6 @@ describe("Logger", function() {
       describe("minLevel >= DEBUG", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.DEBUG});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -180,12 +188,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("debug(msg)", function() {
             logger.debug("My message.");
-            writer.callCount.must.be.equal(1);
+            writer.spy.called("write()").must.be.equal(1);
           });
         });
       });
@@ -193,7 +202,6 @@ describe("Logger", function() {
       describe("minLevel > DEBUG", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.INFO});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -210,12 +218,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("debug(msg)", function() {
             logger.debug("My message.");
-            writer.callCount.must.be.equal(0);
+            writer.spy.called("write()").must.be.equal(0);
           });
         });
       });
@@ -225,7 +234,6 @@ describe("Logger", function() {
       describe("minLevel >= INFO", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.INFO});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -242,12 +250,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("info(msg)", function() {
             logger.info("My message.");
-            writer.callCount.must.be.equal(1);
+            writer.spy.called("write()").must.be.equal(1);
           });
         });
       });
@@ -255,7 +264,6 @@ describe("Logger", function() {
       describe("minLevel > INFO", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.WARN});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -272,12 +280,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("info(msg)", function() {
             logger.info("My message.");
-            writer.callCount.must.be.equal(0);
+            writer.spy.called("write()").must.be.equal(0);
           });
         });
       });
@@ -287,7 +296,6 @@ describe("Logger", function() {
       describe("minLevel >= WARN", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.WARN});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -304,12 +312,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("warn(msg)", function() {
             logger.warn("My message.");
-            writer.callCount.must.be.equal(1);
+            writer.spy.called("write()").must.be.equal(1);
           });
         });
       });
@@ -317,7 +326,6 @@ describe("Logger", function() {
       describe("minLevel > WARN", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.ERROR});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -334,12 +342,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("warn(msg)", function() {
             logger.warn("My message.");
-            writer.callCount.must.be.equal(0);
+            writer.spy.called("write()").must.be.equal(0);
           });
         });
       });
@@ -349,7 +358,6 @@ describe("Logger", function() {
       describe("minLevel >= ERROR", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.ERROR});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -366,12 +374,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("error(msg)", function() {
             logger.error("My message.");
-            writer.callCount.must.be.equal(1);
+            writer.spy.called("write()").must.be.equal(1);
           });
         });
       });
@@ -379,7 +388,6 @@ describe("Logger", function() {
       describe("minLevel > ERROR", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.FATAL});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -396,12 +404,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("error(msg)", function() {
             logger.error("My message.");
-            writer.callCount.must.be.equal(0);
+            writer.spy.called("write()").must.be.equal(0);
           });
         });
       });
@@ -411,7 +420,6 @@ describe("Logger", function() {
       describe("minLevel >= FATAL", function() {
         beforeEach(function() {
           logger = new Logger("one", {minLevel: Level.FATAL});
-          writer = sinon.spy();
         });
 
         describe("Error handling", function() {
@@ -428,12 +436,13 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
+            writer = spy(new DummyWriter(), "write()");
             logger.onWrite(writer);
           });
 
           it("fatal(msg)", function() {
             logger.fatal("My message.");
-            writer.callCount.must.be.equal(1);
+            writer.spy.called("write()").must.be.equal(1);
           });
         });
       });

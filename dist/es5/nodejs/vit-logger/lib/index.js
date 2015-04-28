@@ -3,25 +3,25 @@
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 /**
  * The log level.
- * 
+ *
  * @enum
  */
 
 var Level = exports.Level =
 /**
  * Constructor.
- * 
+ *
  * @private
  */
 function Level(name, value) {
-	_classCallCheck(this, Level);
+  _classCallCheck(this, Level);
 
-	Object.defineProperty(this, "name", { value: name, enumerable: true });
-	Object.defineProperty(this, "value", { value: value, enumerable: true });
+  Object.defineProperty(this, "name", { value: name, enumerable: true });
+  Object.defineProperty(this, "value", { value: value, enumerable: true });
 };
 
 Object.defineProperty(Level, "DEBUG", { value: new Level("DEBUG", 0), enumerable: true });
@@ -35,33 +35,33 @@ Object.defineProperty(Level, "FATAL", { value: new Level("FATAL", 4), enumerable
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 /**
  * A log entry.
- * 
- * @readonly source:Logger	The logger source.
- * @readonly level:Level		The log level.
- * @readonly timestamp:date	The timestamp.
- * @readonly message:string	The message.
+ *
+ * @readonly source:Logger  The logger source.
+ * @readonly level:Level    The log level.
+ * @readonly timestamp:date  The timestamp.
+ * @readonly message:string  The message.
  */
 
 var LogEntry = exports.LogEntry =
 /**
  * Constructor.
- * 
+ *
  * @param(attr) source
  * @param(attr) level
  * @param(attr) timestamp
  * @param(attr) message
  */
 function LogEntry(source, level, timestamp, message) {
-	_classCallCheck(this, LogEntry);
+  _classCallCheck(this, LogEntry);
 
-	Object.defineProperty(this, "source", { value: source, enumerable: true });
-	Object.defineProperty(this, "level", { value: level, enumerable: true });
-	Object.defineProperty(this, "timestamp", { value: timestamp, enumerable: true });
-	Object.defineProperty(this, "message", { value: message, enumerable: true });
+  Object.defineProperty(this, "source", { value: source, enumerable: true });
+  Object.defineProperty(this, "level", { value: level, enumerable: true });
+  Object.defineProperty(this, "timestamp", { value: timestamp, enumerable: true });
+  Object.defineProperty(this, "message", { value: message, enumerable: true });
 };
 
 "use strict";
@@ -385,115 +385,115 @@ var _createClass = (function () { function defineProperties(target, props) { for
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 /**
  * A writer.
- * 
+ *
  * @abstract
- * @readonly pattern:string	The format pattern.
+ * @readonly pattern:string  The format pattern.
  */
 
 var Writer = exports.Writer = (function () {
-	/**
-  * Constructor.
-  * 
-  * @param(attr) pattern
-  */
+  /**
+   * Constructor.
+   *
+   * @param(attr) pattern
+   */
 
-	function Writer() {
-		var pattern = arguments[0] === undefined ? Writer.DEFAULT_PATTERN : arguments[0];
+  function Writer() {
+    var pattern = arguments[0] === undefined ? Writer.DEFAULT_PATTERN : arguments[0];
 
-		_classCallCheck(this, Writer);
+    _classCallCheck(this, Writer);
 
-		Object.defineProperty(this, "pattern", { value: pattern, enumerable: true });
-	}
+    Object.defineProperty(this, "pattern", { value: pattern, enumerable: true });
+  }
 
-	_createClass(Writer, {
-		write: {
+  _createClass(Writer, {
+    write: {
 
-			/**
-    * Writes a log entry.
-    * 
-    * @abstract
-    * @param entry:LogEntry	The log entry.
-    */
+      /**
+       * Writes a log entry.
+       *
+       * @abstract
+       * @param entry:LogEntry  The log entry.
+       */
 
-			value: function write(entry) {
-				throw new Error("Abstract method.");
-			}
-		},
-		format: {
+      value: function write(entry) {
+        throw new Error("Abstract method.");
+      }
+    },
+    format: {
 
-			/**
-    * Builds the line to write.
-    * 
-    * @protected
-    * @param entry:LogEntry	The log entry to build.
-    */
+      /**
+       * Builds the line to write.
+       *
+       * @protected
+       * @param entry:LogEntry  The log entry to build.
+       */
 
-			value: function format(entry) {
-				var line;
+      value: function format(entry) {
+        var line;
 
-				//(1) format
-				line = this.pattern;
-				line = line.replace("%l", this.formatLevel(entry));
-				line = line.replace("%s", entry.source.qn);
-				line = line.replace("%t", this.formatTimestamp(entry));
-				line = line.replace("%m", entry.message);
+        //(1) format
+        line = this.pattern;
+        line = line.replace("%l", this.formatLevel(entry));
+        line = line.replace("%s", entry.source.qn);
+        line = line.replace("%t", this.formatTimestamp(entry));
+        line = line.replace("%m", entry.message);
 
-				//(2) return
-				return line;
-			}
-		},
-		formatLevel: {
+        //(2) return
+        return line;
+      }
+    },
+    formatLevel: {
 
-			/**
-    * Formats the level.
-    * 
-    * @protected
-    * @param entry:LogEntry	The entry.
-    * @return string
-    */
+      /**
+       * Formats the level.
+       *
+       * @protected
+       * @param entry:LogEntry  The entry.
+       * @return string
+       */
 
-			value: function formatLevel(entry) {
-				return entry.level.name;
-			}
-		},
-		formatTimestamp: {
+      value: function formatLevel(entry) {
+        return entry.level.name;
+      }
+    },
+    formatTimestamp: {
 
-			/**
-    * Formats a timestamp.
-    * 
-    * @protected
-    * @param entry:LogEntry	The entry.
-    * @return string
-    */
+      /**
+       * Formats a timestamp.
+       *
+       * @protected
+       * @param entry:LogEntry  The entry.
+       * @return string
+       */
 
-			value: function formatTimestamp(entry) {
-				var ts, day, mon, year, hour, min, sec;
+      value: function formatTimestamp(entry) {
+        var ts, day, mon, year, hour, min, sec;
 
-				ts = entry.timestamp;
+        ts = entry.timestamp;
 
-				day = ts.getDate();
-				mon = ts.getMonth() + 1;
-				year = ts.getFullYear();
-				hour = ts.getHours();
-				min = ts.getMinutes();
-				sec = ts.getSeconds();
+        day = ts.getDate();
+        mon = ts.getMonth() + 1;
+        year = ts.getFullYear();
+        hour = ts.getHours();
+        min = ts.getMinutes();
+        sec = ts.getSeconds();
 
-				if (day < 10) day = "0" + day;
-				if (mon < 10) mon = "0" + mon;
-				if (hour < 10) hour = "0" + hour;
-				if (min < 10) min = "0" + min;
-				if (sec < 10) min = "0" + sec;
+        if (day < 10) day = "0" + day;
+        if (mon < 10) mon = "0" + mon;
+        if (hour < 10) hour = "0" + hour;
+        if (min < 10) min = "0" + min;
+        if (sec < 10) min = "0" + sec;
 
-				return year + "-" + mon + "-" + day + " " + hour + ":" + min + ":" + sec;
-			}
-		}
-	});
+        return year + "-" + mon + "-" + day + " " + hour + ":" + min + ":" + sec;
+      }
+    }
+  });
 
-	return Writer;
+  return Writer;
 })();
 
 Object.defineProperty(Writer, "DEFAULT_PATTERN", { value: "%l [%t]: %m" });

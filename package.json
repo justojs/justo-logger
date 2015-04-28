@@ -1,6 +1,6 @@
 {
   "name": "vit-logger",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A simple logger for Node.js and browsers.",
   "homepage": "https://github.com/vitxorg/vit-logger",
   "license": "MIT",
@@ -17,20 +17,23 @@
     }
   ],
   "keywords": [
-    "log",
     "Browser log",
-    "JavaScript log",
-    "Node log",
-    "Node.js log",
-    "logger",
     "Browser logger",
-    "JavaScript logger",
-    "Node logger",
-    "Node.js logger",
-    "logging",
     "Browser logging",
+    "io.js log",
+    "io.js logger",
+    "io.js logging",
+    "JavaScript log",
+    "JavaScript logger",
     "JavaScript logging",
+    "log",
+    "logger",
+    "logging",
+    "Node log",
+    "Node logger",
     "Node logging",
+    "Node.js log",
+    "Node.js logger",
     "Node.js logging"
   ],
   "bugs": {
@@ -58,8 +61,8 @@
     "grunt-contrib-jshint": "*",
     "grunt-mocha-test": "^0.12.7",
     "justo-assert": "*",
-    "mocha": "^2.2.1",
-    "sinon": "^1.14.1"
+    "justo-double": "*",
+    "mocha": "^2.2.1"
   },
   "preferGlobal": false,
   "main": "lib/index.js",

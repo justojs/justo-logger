@@ -2,7 +2,7 @@
 
 A simple logger for Node.js and browsers.
 
-Proudly made in Valencia, Spain, EU.
+*Proudly made in Valencia, Spain, EU.*
 
 Features:
 
@@ -22,6 +22,14 @@ By convention, the package should be imported as `vlog`:
 ```
 const vlog = require("vit-logger");
 ```
+
+## Table of contents
+
+1. [Architecture](#architecture)
+2. [Logger](#logger)
+3. [Writers](#writers)
+
+------------------
 
 ## Architecture
 
@@ -51,6 +59,8 @@ logger.fatal("My fatal message");
 
 The writer will receive the entries INFO, WARN, ERROR and FATAL, but not DEBUG, because we
 have configured the logger to write only the messages with level greater than or equal to INFO.
+
+------------------
 
 ## Logger
 
@@ -121,6 +131,8 @@ logger.minLevel = "info";
 logger.minLevel = "INFO";
 logger.minLevel = Level.INFO;
 ```
+
+------------------
 
 ## Writers
 
@@ -276,6 +288,8 @@ size is reached. There is only one exception, if we register an entry with a log
 the writing trigger is issued, without reaching the batch size.
 
 The batch mode reduces the disk I/O.
+
+------------------
 
 ## TODO
 
