@@ -1,8 +1,8 @@
 //imports
 const spy = require("justo-double").spy;
-const vlog = require("vit-logger");
+const vlog = require("../../../../dist/es5/nodejs/vit-logger");
 const Writer = vlog.Writer;
-const ConsoleWriter = require("vit-logger").writer.ConsoleWriter;
+const ConsoleWriter = vlog.writer.ConsoleWriter;
 const LogEntry = vlog.LogEntry;
 const Level = vlog.Level;
 

@@ -1,6 +1,6 @@
 {
   "name": "vit-logger",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "A simple logger for Node.js and browsers.",
   "homepage": "https://github.com/vitxorg/vit-logger",
   "license": "MIT",
@@ -60,6 +60,7 @@
     "grunt-contrib-copy": "*",
     "grunt-contrib-jshint": "*",
     "grunt-mocha-test": "^0.12.7",
+    "grunt-travis-lint": "0.0.3",
     "justo-assert": "*",
     "justo-double": "*",
     "mocha": "^2.2.1"
@@ -69,5 +70,8 @@
   "files": [
     "lib",
     "test"
-  ]
+  ],
+  "scripts": {
+    "test": "grunt mochaTest:nodejs"
+  }
 }

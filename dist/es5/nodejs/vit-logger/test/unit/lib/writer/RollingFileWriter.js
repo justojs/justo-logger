@@ -3,8 +3,8 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const async = require("async");
-const vlog = require("vit-logger");
-const RollingFileWriter = require("vit-logger").writer.RollingFileWriter;
+const vlog = require("../../../../dist/es5/nodejs/vit-logger");
+const RollingFileWriter = vlog.writer.RollingFileWriter;
 const LogEntry = vlog.LogEntry;
 const Level = vlog.Level;
 

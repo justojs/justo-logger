@@ -1,5 +1,5 @@
 //imports
-const vlog = require("vit-logger");
+const vlog = require("../../../dist/es5/nodejs/vit-logger");
 const Writer = vlog.Writer;
 const LogEntry = vlog.LogEntry;
 const Level = vlog.Level;

@@ -14,7 +14,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 //imports
-var ConsoleWriter = require("vit-logger").writer.ConsoleWriter;
+var vlog = require("../..");
+var ConsoleWriter = vlog.writer.ConsoleWriter;
 var colors = require("colors");
 
 /**

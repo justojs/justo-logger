@@ -2,7 +2,7 @@
 const assert = require("assert");
 const dummy = require("justo-double").dummy;
 const spy = require("justo-double").spy;
-const vlog = require("vit-logger");
+const vlog = require("../../../dist/es5/nodejs/vit-logger");
 const Logger = vlog.Logger;
 const Level = vlog.Level;
 
