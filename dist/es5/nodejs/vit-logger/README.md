@@ -1,4 +1,4 @@
-# vit-logger
+[![Build Status](https://travis-ci.org/vitxorg/vit-logger.svg?branch=master)](https://travis-ci.org/vitxorg/vit-logger)
 
 A simple logger for Node.js and browsers.
 
