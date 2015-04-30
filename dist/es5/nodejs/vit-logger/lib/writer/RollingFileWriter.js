@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", {
 var fs = require("fs");
 var path = require("path");
 var util = require("util");
-var vlog = require("vit-logger");
+var vlog = require("../..");
 var FileWriter = vlog.writer.FileWriter;
 
 /**

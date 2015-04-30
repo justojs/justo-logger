@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 //imports
-var vlog = require("vit-logger");
+var vlog = require("../..");
 var Writer = vlog.Writer;
 var Level = vlog.Level;
 

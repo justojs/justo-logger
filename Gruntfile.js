@@ -14,12 +14,11 @@ module.exports = function (grunt) {
 
       es5: {
         files: {
+          "build/es5/lib/main_nodejs.js": "lib/main_nodejs.js",
           "build/es5/lib/Level.js": "lib/Level.js",
           "build/es5/lib/LogEntry.js": "lib/LogEntry.js",
           "build/es5/lib/Logger.js": "lib/Logger.js",
           "build/es5/lib/Writer.js": "lib/Writer.js",
-          "build/es5/lib/writer/main_nodejs.js": "lib/writer/main_nodejs.js",
-          "build/es5/lib/writer/main_browser.js": "lib/writer/main_browser.js",
           "build/es5/lib/writer/ConsoleWriter.js": "lib/writer/ConsoleWriter.js",
           "build/es5/lib/writer/ColoredConsoleWriter.js": "lib/writer/ColoredConsoleWriter.js",
           "build/es5/lib/writer/FileWriter.js": "lib/writer/FileWriter.js",
@@ -40,7 +39,7 @@ module.exports = function (grunt) {
       },
 
       nodejs: {
-        src: ["build/es5/lib/*.js", "build/es5/lib/writer/main_nodejs.js"],
+        src: ["build/es5/lib/*.js"],
         dest: "dist/es5/nodejs/<%= pkg.name %>/lib/index.js"
       },
 
@@ -96,7 +95,7 @@ module.exports = function (grunt) {
       }
     },
 
-    mochaTest:{
+    mochaTest: {
       nodejs: {
         options: {
           ignoreLeaks: false,
@@ -114,7 +113,7 @@ module.exports = function (grunt) {
           "test/unit/**/*.js",
         ]
       }
-    }
+    },
   });
 
   //(2) load plugins
@@ -124,9 +123,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-mocha-test");
+  grunt.loadNpmTasks("grunt-travis-lint");
 
   //(3) definne tasks and alias
   grunt.registerTask("buildes5", [
+    "travis-lint",
     "jshint",
     "clean:es5",
     "babel:es5",
@@ -138,5 +139,5 @@ module.exports = function (grunt) {
   grunt.registerTask("es5", ["buildes5", "mochaTest:nodejs"]);
 
   //(4) define default task
-  grunt.registerTask("default", []);
+  grunt.registerTask("default", ["es5"]);
 };

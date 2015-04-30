@@ -2,8 +2,8 @@
 const os = require("os");
 const fs = require("fs");
 const spy = require("justo-double").spy;
-const vlog = require("vit-logger");
-const FileWriter = require("vit-logger").writer.FileWriter;
+const vlog = require("../../../../dist/es5/nodejs/vit-logger");
+const FileWriter = vlog.writer.FileWriter;
 const LogEntry = vlog.LogEntry;
 const Level = vlog.Level;
 
