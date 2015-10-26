@@ -1,13 +1,13 @@
 {
-  "name": "vit-logger",
-  "version": "0.6.2",
+  "name": "justo-logger",
+  "version": "0.7.0",
   "description": "A simple logger for Node.js and browsers.",
-  "homepage": "https://github.com/vitxorg/vit-logger",
+  "homepage": "https://github.com/justojs/justo-logger",
   "license": "MIT",
   "author": {
-    "name": "VITx",
-    "email": "vitx.org@outlook.com",
-    "url": "http://www.vitx.org"
+    "name": "The Justo.js Development Group",
+    "email": "justojs.org@outlook.com",
+    "url": "http://www.justojs.org"
   },
   "contributors": [
     {
@@ -20,12 +20,11 @@
     "Browser log",
     "Browser logger",
     "Browser logging",
-    "io.js log",
-    "io.js logger",
-    "io.js logging",
     "JavaScript log",
     "JavaScript logger",
     "JavaScript logging",
+    "Justo",
+    "Justo.js",
     "log",
     "logger",
     "logging",
@@ -37,12 +36,12 @@
     "Node.js logging"
   ],
   "bugs": {
-    "url": "https://github.com/vitxorg/vit-logger/issues",
-    "email": "vitx.org@outlook.com"
+    "url": "https://github.com/justojs/justo-logger/issues",
+    "email": "justojs.org@outlook.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vitxorg/vit-logger.git"
+    "url": "https://github.com/justojs/justo-logger.git"
   },
   "engines": {
     "node": ">=0.12.0"
@@ -52,18 +51,17 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "async": "^0.9.0",
+    "async": "*",
     "grunt": "^0.4.5",
     "grunt-babel": "*",
     "grunt-contrib-clean": "*",
-    "grunt-contrib-concat": "*",
     "grunt-contrib-copy": "*",
     "grunt-contrib-jshint": "*",
-    "grunt-mocha-test": "^0.12.7",
-    "grunt-travis-lint": "0.0.3",
+    "grunt-mocha-test": "*",
+    "grunt-travis-lint": "*",
     "justo-assert": "*",
-    "justo-double": "*",
-    "mocha": "^2.2.1"
+    "justo-spy": "*",
+    "mocha": "*"
   },
   "preferGlobal": false,
   "main": "lib/index.js",

@@ -3,10 +3,10 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const async = require("async");
-const vlog = require("../../../../dist/es5/nodejs/vit-logger");
-const RollingFileWriter = vlog.writer.RollingFileWriter;
-const LogEntry = vlog.LogEntry;
-const Level = vlog.Level;
+const log = require("../../../../dist/es5/nodejs/justo-logger");
+const RollingFileWriter = log.writer.RollingFileWriter;
+const Level = log.Level;
+const LogEntry = require("../../../../dist/es5/nodejs/justo-logger/lib/LogEntry");
 
 //suite
 describe("writer.RollingFileWriter", function() {

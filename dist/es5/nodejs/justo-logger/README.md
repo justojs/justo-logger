@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/vitxorg/vit-logger.svg?branch=master)](https://travis-ci.org/vitxorg/vit-logger)
+[![Build Status](https://travis-ci.org/justojs/justo-logger.svg?branch=master)](https://travis-ci.org/vitxorg/justo-logger)
 
 A simple logger for Node.js and browsers.
 
-*Proudly made in Valencia, Spain, EU.*
+*Proudly made with ♥ in Valencia, Spain, EU.*
 
 Features:
 
@@ -13,14 +13,14 @@ Features:
 ## Usage
 
 ```
-npm install vit-logger
+npm install justo-logger
 ```
 
 
-By convention, the package should be imported as `vlog`:
+By convention, the package should be imported as `log`:
 
 ```
-const vlog = require("vit-logger");
+const log = require("justo-logger");
 ```
 
 ## Table of contents
@@ -40,7 +40,7 @@ We have two basic components:
 
 A logger can have zero, one or more writers associated.
 The user must associate the writers to the logger, being the logger which passes the log entries to the writers.
-If we don't associate any writer, nothing will be write.
+If we don't associate any writer, nothing will be written.
 
 Here's an illustrative example:
 
@@ -136,7 +136,7 @@ logger.minLevel = Level.INFO;
 
 ## Writers
 
-A writer is a component that writes the log entries to a device, for example, the console, a file,
+A writer is a component to write the log entries to a device, for example, the console, a file,
 a database, etc.
 
 We can create any number of writers for a logger. Once created, we have to associate it to the logger,
@@ -148,12 +148,12 @@ logger.onWrite(new ConsoleWriter());
 
 ### Namespace
 
-The writers have their own namespace into the `vit-logger` library, the `writer` property.
+The writers have their own namespace into the `justo-logger` library, the `writer` property.
 Example:
 
 ```
-const vlog = require("vit-logger");
-const ConsoleWriter = vlog.writer.ConsoleWriter;
+const log = require("justo-logger");
+const ConsoleWriter = log.writer.ConsoleWriter;
 ```
 
 ### Format pattern
@@ -288,9 +288,3 @@ size is reached. There is only one exception, if we register an entry with a log
 the writing trigger is issued, without reaching the batch size.
 
 The batch mode reduces the disk I/O.
-
-------------------
-
-## TODO
-
-- Database writers.

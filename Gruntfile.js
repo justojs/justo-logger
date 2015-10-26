@@ -5,8 +5,6 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
 
-    banner: "",
-
     babel: {
       options: {
         sourceMap: false,
@@ -14,7 +12,7 @@ module.exports = function (grunt) {
 
       es5: {
         files: {
-          "build/es5/lib/main_nodejs.js": "lib/main_nodejs.js",
+          "build/es5/lib/index.js": "lib/index.js",
           "build/es5/lib/Level.js": "lib/Level.js",
           "build/es5/lib/LogEntry.js": "lib/LogEntry.js",
           "build/es5/lib/Logger.js": "lib/Logger.js",
@@ -33,38 +31,12 @@ module.exports = function (grunt) {
       }
     },
 
-    concat: {
-      options: {
-        separator: "\n\n"
-      },
-
-      nodejs: {
-        src: ["build/es5/lib/*.js"],
-        dest: "dist/es5/nodejs/<%= pkg.name %>/lib/index.js"
-      },
-
-      browser: {
-        options: {
-          process: function(src, filepath) {
-            if (/ConsoleWriter.js$/.test(filepath)) {
-               src = src.replace(/\/\/imports\n(var .*;\n)*/, "");
-             }
-
-             return src;
-          }
-        },
-
-        src: ["build/es/lib/*.js", "build/es5/lib/writer/main_browser.js", "build/es5/lib/writer/ConsoleWriter.js"],
-        dest: "dist/es5/browser/<%= pkg.name %>/lib/index.js"
-      }
-    },
-
     copy: {
       nodejs: {
         files: [
+          {cwd: "build/es5/", src: ["lib/*.js", "lib/writer/*.js"], dest: "dist/es5/nodejs/<%= pkg.name %>", expand: true},
           {src: ["package.json", "README.md"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
-          {src: ["test/**/*.*"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
-          {cwd: "build/es5/lib/writer/", src: ["*.*", "!main_*.js"], dest: "dist/es5/nodejs/<%= pkg.name %>/lib/writer", expand: true}
+          {src: ["test/**/*.*"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true}
         ]
       }
     },
@@ -96,7 +68,7 @@ module.exports = function (grunt) {
     },
 
     mochaTest: {
-      nodejs: {
+      es5: {
         options: {
           ignoreLeaks: false,
           quiet: false,
@@ -119,25 +91,16 @@ module.exports = function (grunt) {
   //(2) load plugins
   grunt.loadNpmTasks("grunt-babel");
   grunt.loadNpmTasks("grunt-contrib-clean");
-  grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-mocha-test");
   grunt.loadNpmTasks("grunt-travis-lint");
 
   //(3) definne tasks and alias
-  grunt.registerTask("buildes5", [
-    "travis-lint",
-    "jshint",
-    "clean:es5",
-    "babel:es5",
-    "concat:nodejs",
-    "concat:browser",
-    "copy:nodejs"
-  ]);
-
-  grunt.registerTask("es5", ["buildes5", "mochaTest:nodejs"]);
+  grunt.registerTask("buildes5", ["travis-lint", "jshint", "clean:es5", "babel:es5", "copy:nodejs"]);
+  grunt.registerTask("test", ["mochaTest:es5"]);
+  grunt.registerTask("es5", ["buildes5", "test"]);
 
   //(4) define default task
-  grunt.registerTask("default", ["es5"]);
+  grunt.registerTask("default", []);
 };

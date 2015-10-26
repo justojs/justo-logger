@@ -1,10 +1,10 @@
 //imports
-const spy = require("justo-double").spy;
-const vlog = require("../../../../dist/es5/nodejs/vit-logger");
-const Writer = vlog.Writer;
-const ColoredConsoleWriter = vlog.writer.ColoredConsoleWriter;
-const LogEntry = vlog.LogEntry;
-const Level = vlog.Level;
+const spy = require("justo-spy");
+const log = require("../../../../dist/es5/nodejs/justo-logger");
+const Writer = log.Writer;
+const ColoredConsoleWriter = log.writer.ColoredConsoleWriter;
+const Level = log.Level;
+const LogEntry = require("../../../../dist/es5/nodejs/justo-logger/lib/LogEntry");
 
 //suite
 describe("writer.ColoredConsoleWriter", function() {

@@ -1,8 +1,8 @@
 //imports
-const vlog = require("../../../dist/es5/nodejs/vit-logger");
-const Writer = vlog.Writer;
-const LogEntry = vlog.LogEntry;
-const Level = vlog.Level;
+const log = require("../../../dist/es5/nodejs/justo-logger");
+const Writer = log.Writer;
+const Level = log.Level;
+const LogEntry = require("../../../dist/es5/nodejs/justo-logger/lib/LogEntry");
 
 //suite
 describe("Writer", function() {

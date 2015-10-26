@@ -1,21 +1,12 @@
 //imports
 const assert = require("assert");
-const dummy = require("justo-double").dummy;
-const spy = require("justo-double").spy;
-const vlog = require("../../../dist/es5/nodejs/vit-logger");
+const spy = require("justo-spy");
+const vlog = require("../../../dist/es5/nodejs/justo-logger");
 const Logger = vlog.Logger;
 const Level = vlog.Level;
 
 //suite
 describe("Logger", function() {
-  function DummyWriter() {
-
-  }
-
-  DummyWriter.prototype.write = function() {
-
-  };
-
   describe("Root logger", function() {
     describe("#constructor", function() {
       describe("Error handling", function() {
@@ -188,7 +179,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -218,7 +209,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -250,7 +241,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -280,7 +271,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -312,7 +303,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -342,7 +333,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -374,7 +365,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -404,7 +395,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 
@@ -436,7 +427,7 @@ describe("Logger", function() {
 
         describe("With writer", function() {
           beforeEach(function() {
-            writer = spy(new DummyWriter(), "write()");
+            writer = spy({}, "write() {}");
             logger.onWrite(writer);
           });
 

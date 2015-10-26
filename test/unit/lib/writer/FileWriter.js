@@ -1,11 +1,11 @@
 //imports
 const os = require("os");
 const fs = require("fs");
-const spy = require("justo-double").spy;
-const vlog = require("../../../../dist/es5/nodejs/vit-logger");
-const FileWriter = vlog.writer.FileWriter;
-const LogEntry = vlog.LogEntry;
-const Level = vlog.Level;
+const spy = require("justo-spy");
+const log = require("../../../../dist/es5/nodejs/justo-logger");
+const FileWriter = log.writer.FileWriter;
+const Level = log.Level;
+const LogEntry = require("../../../../dist/es5/nodejs/justo-logger/lib/LogEntry");
 
 //suite
 describe("writer.FileWriter", function() {
