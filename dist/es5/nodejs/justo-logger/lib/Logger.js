@@ -18,8 +18,6 @@ var _LogEntry = require("./LogEntry");
 
 var _LogEntry2 = _interopRequireDefault(_LogEntry);
 
-var _util = require("./util");
-
 var Logger = (function () {
   function Logger() {
     _classCallCheck(this, Logger);
@@ -90,27 +88,47 @@ var Logger = (function () {
   }, {
     key: "debug",
     value: function debug() {
-      this.write(_Level2["default"].DEBUG, _util.format.apply(undefined, arguments));
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      this.write(_Level2["default"].DEBUG, args.join(" "));
     }
   }, {
     key: "info",
     value: function info() {
-      this.write(_Level2["default"].INFO, _util.format.apply(undefined, arguments));
+      for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+
+      this.write(_Level2["default"].INFO, args.join(" "));
     }
   }, {
     key: "warn",
     value: function warn() {
-      this.write(_Level2["default"].WARN, _util.format.apply(undefined, arguments));
+      for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
+      }
+
+      this.write(_Level2["default"].WARN, args.join(" "));
     }
   }, {
     key: "error",
     value: function error() {
-      this.write(_Level2["default"].ERROR, _util.format.apply(undefined, arguments));
+      for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
+      }
+
+      this.write(_Level2["default"].ERROR, args.join(" "));
     }
   }, {
     key: "fatal",
     value: function fatal() {
-      this.write(_Level2["default"].FATAL, _util.format.apply(undefined, arguments));
+      for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+        args[_key6] = arguments[_key6];
+      }
+
+      this.write(_Level2["default"].FATAL, args.join(" "));
     }
   }, {
     key: "qualifiedName",

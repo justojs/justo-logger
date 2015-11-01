@@ -106,18 +106,20 @@ The level indicates the importance of the entry, from minor to major:
 By type of level, we must use the following logger methods:
 
 ```
-logger.debug(msg : string)
-logger.info(msg : string)
-logger.warn(msg : string)
-logger.error(msg : string)
-logger.fatal(msg : string)
+logger.debug(msg)
+logger.info(msg)
+logger.warn(msg)
+logger.error(msg)
+logger.fatal(msg)
 ```
 
-The messages can be specified passing several arguments, which will be formated by
-`util.format()`. For example:
+The methods can accept several arguments. Their concatenation is the message.
+Example:
 
 ```
-logger.debug("The user '%s' has been '%s'.", user.username, user.status);
+logger.debug("This", "is", "the", "message");
+//similar to
+logger.debug("This is the message");
 ```
 
 #### Min level and max level

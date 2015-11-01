@@ -309,7 +309,7 @@ describe("Logger", function() {
         });
 
         describe("No writer", function() {
-          it("warn(msg)", function() {
+          it("warn(msg : string)", function() {
             logger.warn("My message.");
           });
         });

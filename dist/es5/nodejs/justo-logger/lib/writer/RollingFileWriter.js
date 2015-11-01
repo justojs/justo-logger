@@ -22,10 +22,6 @@ var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
-var _util = require("util");
-
-var _util2 = _interopRequireDefault(_util);
-
 var _FileWriter2 = require("./FileWriter");
 
 var _FileWriter3 = _interopRequireDefault(_FileWriter2);
@@ -50,7 +46,7 @@ var RollingFileWriter = (function (_FileWriter) {
       opts = args[3];
     }
 
-    opts = _util2["default"]._extend({}, opts);
+    opts = Object.assign({}, opts);
     if (!opts.maxSize || opts.maxSize <= 0) opts.maxSize = RollingFileWriter.DEFAULT_OPTIONS.maxSize;
     if (!opts.maxArchives || opts.maxArchives <= 0) opts.maxArchives = RollingFileWriter.DEFAULT_OPTIONS.maxArchives;
 
