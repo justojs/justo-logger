@@ -24,31 +24,71 @@ describe("writer.ConsoleWriter", function() {
     it("constructor()", function() {
       var writer = new ConsoleWriter();
 
-      writer.pattern.must.be.equal(Writer.DEFAULT_PATTERN);
+      writer.patterns.must.be.eq(Writer.DEFAULT_PATTERNS);
       writer.console.must.be.same(console);
     });
 
-    it("constructor(pattern)", function() {
+    it("constructor(pattern : string)", function() {
       var writer = new ConsoleWriter("%l: %m");
 
-      writer.pattern.must.be.equal("%l: %m");
+      writer.patterns.must.be.eq({
+        debug: "%l: %m",
+        info: "%l: %m",
+        warn: "%l: %m",
+        error: "%l: %m",
+        fatal: "%l: %m"
+      });
       writer.console.must.be.same(console);
     });
 
-    it("constructor(console)", function() {
-      var writer = new ConsoleWriter({});
-
-      writer.pattern.must.be.equal(Writer.DEFAULT_PATTERN);
-      writer.console.must.be.equal({});
-      writer.console.must.not.be.same(console);
+    it("constructor(patterns : object)", function() {
+      var writer = new ConsoleWriter({
+        debug: "%m",
+        info: "%m",
+        warn: "%m",
+        error: "%m",
+        fatal: "%m"
+      });
+      writer.patterns.must.be.eq({
+        debug: "%m",
+        info: "%m",
+        warn: "%m",
+        error: "%m",
+        fatal: "%m"
+      });
+      writer.console.must.be.same(console);
     });
 
-    it("constructor(pattern, console)", function() {
-      var writer = new ConsoleWriter("%l: %m", {});
+    it("constructor(pattern : string, console)", function() {
+      var writer = new ConsoleWriter("%m", console);
+      writer.patterns.must.be.eq({
+        debug: "%m",
+        info: "%m",
+        warn: "%m",
+        error: "%m",
+        fatal: "%m"
+      });
+      writer.console.must.be.same(console);
+    });
 
-      writer.pattern.must.be.equal("%l: %m");
-      writer.console.must.be.equal({});
-      writer.console.must.not.be.same(console);
+    it("constructor(patterns : object, console)", function() {
+      var console = {};
+      var writer = new ConsoleWriter({
+        debug: "%m",
+        info: "%m",
+        warn: "%m",
+        error: "%m",
+        fatal: "%m"
+      }, console);
+
+      writer.console.must.be.same(console);
+      writer.patterns.must.be.eq({
+        debug: "%m",
+        info: "%m",
+        warn: "%m",
+        error: "%m",
+        fatal: "%m"
+      });
     });
   });
 
@@ -56,41 +96,38 @@ describe("writer.ConsoleWriter", function() {
     var writer, console;
 
     beforeEach(function() {
-      console = {};
-      console.log = spy(function() {});
-      console.error = spy(function() {});
-
-      writer = new ConsoleWriter(console);
+      console = spy({}, ["log() {}", "error() {}"]);
+      writer = new ConsoleWriter({}, console);
     });
 
     it("write(DEBUG)", function() {
       writer.write(debugEntry);
-      console.log.spy.called().must.be.equal(1);
-      console.error.spy.called().must.be.equal(0);
+      console.log.spy.called().must.be.eq(1);
+      console.error.spy.called().must.be.eq(0);
     });
 
     it("write(INFO)", function() {
       writer.write(infoEntry);
-      console.log.spy.called().must.be.equal(1);
-      console.error.spy.called().must.be.equal(0);
+      console.log.spy.called().must.be.eq(1);
+      console.error.spy.called().must.be.eq(0);
     });
 
     it("write(WARN)", function() {
       writer.write(warnEntry);
-      console.log.spy.called().must.be.equal(0);
-      console.error.spy.called().must.be.equal(1);
+      console.log.spy.called().must.be.eq(0);
+      console.error.spy.called().must.be.eq(1);
     });
 
     it("write(ERROR)", function() {
       writer.write(errorEntry);
-      console.log.spy.called().must.be.equal(0);
-      console.error.spy.called().must.be.equal(1);
+      console.log.spy.called().must.be.eq(0);
+      console.error.spy.called().must.be.eq(1);
     });
 
     it("write(FATAL)", function() {
       writer.write(fatalEntry);
-      console.log.spy.called().must.be.equal(0);
-      console.error.spy.called().must.be.equal(1);
+      console.log.spy.called().must.be.eq(0);
+      console.error.spy.called().must.be.eq(1);
     });
   });
 });

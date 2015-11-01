@@ -4,6 +4,7 @@ const spy = require("justo-spy");
 const vlog = require("../../../dist/es5/nodejs/justo-logger");
 const Logger = vlog.Logger;
 const Level = vlog.Level;
+const format = require("../../../dist/es5/nodejs/justo-logger/lib/Logger").format;
 
 //suite
 describe("Logger", function() {
@@ -140,24 +141,6 @@ describe("Logger", function() {
 
   describe("Log messages", function() {
     var logger, writer;
-
-    describe("#format()", function() {
-      beforeEach(function() {
-        logger = new Logger("one");
-      });
-
-      it("format()", function() {
-        logger.format().must.be.eq("");
-      });
-
-      it("format(msg)", function() {
-        logger.format("My message").must.be.eq("My message");
-      });
-
-      it("format(pattern, param1, param2...)", function() {
-        logger.format("Hi, %s, %s", "VIT", "how are you?").must.be.eq("Hi, VIT, how are you?");
-      });
-    });
 
     describe("#debug()", function() {
       describe("minLevel >= DEBUG", function() {

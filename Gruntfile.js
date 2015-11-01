@@ -8,6 +8,7 @@ module.exports = function (grunt) {
     babel: {
       options: {
         sourceMap: false,
+        comments: false
       },
 
       es5: {
@@ -16,6 +17,7 @@ module.exports = function (grunt) {
           "build/es5/lib/Level.js": "lib/Level.js",
           "build/es5/lib/LogEntry.js": "lib/LogEntry.js",
           "build/es5/lib/Logger.js": "lib/Logger.js",
+          "build/es5/lib/util.js": "lib/util.js",
           "build/es5/lib/Writer.js": "lib/Writer.js",
           "build/es5/lib/writer/ConsoleWriter.js": "lib/writer/ConsoleWriter.js",
           "build/es5/lib/writer/ColoredConsoleWriter.js": "lib/writer/ColoredConsoleWriter.js",

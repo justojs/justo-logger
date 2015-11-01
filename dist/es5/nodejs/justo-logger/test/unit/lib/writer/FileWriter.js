@@ -36,7 +36,7 @@ describe("writer.FileWriter", function() {
     it("constructor(dirPath, fileName)", function() {
       var writer = new FileWriter(TMP_DIR, FILE_NAME);
 
-      writer.pattern.must.be.equal(FileWriter.DEFAULT_PATTERN);
+      writer.patterns.must.be.equal(FileWriter.DEFAULT_PATTERNS);
       writer.dirPath.must.be.equal(TMP_DIR);
       writer.fileName.must.be.equal(FILE_NAME);
       writer.sync.must.be.equal(FileWriter.DEFAULT_OPTIONS.sync);
@@ -49,7 +49,7 @@ describe("writer.FileWriter", function() {
     it("constructor(dirPath, fileName, opts)", function() {
       var writer = new FileWriter(TMP_DIR, FILE_NAME, {sync: true, batch: 2});
 
-      writer.pattern.must.be.equal(FileWriter.DEFAULT_PATTERN);
+      writer.patterns.must.be.equal(FileWriter.DEFAULT_PATTERNS);
       writer.dirPath.must.be.equal(TMP_DIR);
       writer.fileName.must.be.equal(FILE_NAME);
       writer.sync.must.be.equal(true);
@@ -62,7 +62,13 @@ describe("writer.FileWriter", function() {
     it("constructor(pattern, dirPath, fileName)", function() {
       var writer = new FileWriter("%l: %m", TMP_DIR, FILE_NAME);
 
-      writer.pattern.must.be.equal("%l: %m");
+      writer.patterns.must.be.equal({
+        debug: "%l: %m",
+        info: "%l: %m",
+        warn: "%l: %m",
+        error: "%l: %m",
+        fatal: "%l: %m"
+      });
       writer.dirPath.must.be.equal(TMP_DIR);
       writer.fileName.must.be.equal(FILE_NAME);
       writer.sync.must.be.equal(FileWriter.DEFAULT_OPTIONS.sync);
@@ -75,7 +81,13 @@ describe("writer.FileWriter", function() {
     it("constructor(pattern, dirPath, fileName, opts)", function() {
       var writer = new FileWriter("%l: %m", TMP_DIR, FILE_NAME, {sync: true, batch: 2});
 
-      writer.pattern.must.be.equal("%l: %m");
+      writer.patterns.must.be.equal({
+        debug: "%l: %m",
+        info: "%l: %m",
+        warn: "%l: %m",
+        error: "%l: %m",
+        fatal: "%l: %m"
+      });
       writer.dirPath.must.be.equal(TMP_DIR);
       writer.fileName.must.be.equal(FILE_NAME);
       writer.sync.must.be.equal(true);

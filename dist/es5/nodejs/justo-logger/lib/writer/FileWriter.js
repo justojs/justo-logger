@@ -1,4 +1,3 @@
-//imports
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31,44 +30,13 @@ var _Level = require("../Level");
 
 var _Level2 = _interopRequireDefault(_Level);
 
-/**
- * A file writer.
- *
- * @readonly dirPath:string              The directory.
- * @readonly fileName:string            The file name.
- * @readonly synchronous:boolean        Is it synchrnous?
- * @readonly batch:number                The batch size.
- * @readonly(private) trigger:Level      The batch level trigger.
- * @readonly(private) buffer:Entry[]    The entries for writing.
- * @readonly(private) encoding:string    The encoding.
- * @readonly(private) mode:number        The file mode.
- * @readonly(private) opOptions:object  The append options.
- */
-
 var FileWriter = (function (_Writer) {
   _inherits(FileWriter, _Writer);
-
-  /**
-   * Constructor.
-   *
-   * @overload
-   * @param(attr) dirPath
-   * @param(attr) fileName
-   * @param [opts]:object      The writer options: sync and batch.
-   *
-   * @overload
-   * @param(attr) pattern
-   * @param(attr) dirPath
-   * @param(attr) fileName
-   * @param [opts]:object      The writer options: sync and batch.
-   */
 
   function FileWriter() {
     _classCallCheck(this, FileWriter);
 
     var pattern, dirPath, fileName, opts;
-
-    //(1) pre: arguments
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -98,10 +66,8 @@ var FileWriter = (function (_Writer) {
 
     if (!opts) opts = {};
 
-    //(2) superconstructor
     _get(Object.getPrototypeOf(FileWriter.prototype), "constructor", this).call(this, pattern);
 
-    //(3) init
     Object.defineProperty(this, "dirPath", { value: dirPath, enumerable: true });
     Object.defineProperty(this, "fileName", { value: fileName, enumerable: true });
     Object.defineProperty(this, "synchronous", { value: !!opts.sync, enumerable: true });
@@ -113,50 +79,28 @@ var FileWriter = (function (_Writer) {
     Object.defineProperty(this, "opOptions", { value: { encoding: this.encoding, mode: this.mode } });
   }
 
-  /**
-   * @alias synchrnous
-   */
-
   _createClass(FileWriter, [{
     key: "buildBufferContent",
-
-    /**
-     * @private
-     */
     value: function buildBufferContent() {
       var con;
 
-      //(1) build content
       con = "";
 
       while (this.buffer.length > 0) {
         con += this.format(this.buffer.shift()) + "\n";
       }
 
-      //(2) return
       return con;
     }
-
-    /**
-     * @override
-     */
   }, {
     key: "write",
     value: function write(entry) {
-      //(1) push entry
       this.buffer.push(entry);
 
-      //(2) must we write batch buffer?
       if (entry.level.value >= this.trigger.value || this.buffer.length >= this.batch) {
         this.writeBuffer();
       }
     }
-
-    /**
-     * Writes the buffered entries.
-     *
-     * @private
-     */
   }, {
     key: "writeBuffer",
     value: function writeBuffer() {
@@ -164,25 +108,11 @@ var FileWriter = (function (_Writer) {
 
       if (this.sync) this.writeSync(con);else this.writeAsync(con);
     }
-
-    /**
-     * Writes the specified one, synchronously.
-     *
-     * @protected
-     * @param con:string  The content to write.
-     */
   }, {
     key: "writeSync",
     value: function writeSync(con) {
       _fs2["default"].appendFileSync(this.filePath, con, this.opOptions);
     }
-
-    /**
-     * Writes the batch buffer asynchronously.
-     *
-     * @protected
-     * @param con:string  The content to write.
-     */
   }, {
     key: "writeAsync",
     value: function writeAsync(con) {
@@ -195,32 +125,16 @@ var FileWriter = (function (_Writer) {
     get: function get() {
       return this.synchronous;
     }
-
-    /**
-     * Is it asynchronous?
-     *
-     * @type boolean
-     */
   }, {
     key: "asynchronous",
     get: function get() {
       return !this.sync;
     }
-
-    /**
-     * @alias asynchronous
-     */
   }, {
     key: "async",
     get: function get() {
       return this.asynchronous;
     }
-
-    /**
-     * The file path.
-     *
-     * @return string
-     */
   }, {
     key: "filePath",
     get: function get() {

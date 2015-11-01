@@ -1,8 +1,3 @@
-/**
- * The log level.
- *
- * @enum
- */
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11,13 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Level =
-/**
- * Constructor.
- *
- * @private
- */
-function Level(name, value) {
+var Level = function Level(name, value) {
   _classCallCheck(this, Level);
 
   Object.defineProperty(this, "name", { value: name, enumerable: true });

@@ -1,4 +1,3 @@
-//imports
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31,37 +30,13 @@ var _FileWriter2 = require("./FileWriter");
 
 var _FileWriter3 = _interopRequireDefault(_FileWriter2);
 
-/**
- * A rolling file writer.
- *
- * @readonly maximumSize:number          The maximum size for rolling over.
- * @readonly maximumArchives:number      The maximum number of files to maintain.
- */
-
 var RollingFileWriter = (function (_FileWriter) {
   _inherits(RollingFileWriter, _FileWriter);
-
-  /**
-   * Constructor.
-   *
-   * @overload
-   * @param(attr) dirPath
-   * @param(attr) fileName
-   * @param [opts]:object      The writer options: batch, maxSize and maxArchives.
-   *
-   * @overload
-   * @param(attr) pattern
-   * @param(attr) dirPath
-   * @param(attr) fileName
-   * @param [opts]:object      The writer options: batch, maxSize and maxArchives.
-   */
 
   function RollingFileWriter() {
     _classCallCheck(this, RollingFileWriter);
 
     var opts;
-
-    //(1) superconstructor
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -69,7 +44,6 @@ var RollingFileWriter = (function (_FileWriter) {
 
     _get(Object.getPrototypeOf(RollingFileWriter.prototype), "constructor", this).apply(this, args);
 
-    //(2) arguments
     if (args.length == 3) {
       if (typeof args[2] != "string") opts = args[2];
     } else if (args.length == 4) {
@@ -80,84 +54,46 @@ var RollingFileWriter = (function (_FileWriter) {
     if (!opts.maxSize || opts.maxSize <= 0) opts.maxSize = RollingFileWriter.DEFAULT_OPTIONS.maxSize;
     if (!opts.maxArchives || opts.maxArchives <= 0) opts.maxArchives = RollingFileWriter.DEFAULT_OPTIONS.maxArchives;
 
-    //(3) init
     Object.defineProperty(this, "maximumSize", { value: opts.maxSize, enumerable: true });
     Object.defineProperty(this, "maximumArchives", { value: opts.maxArchives, enumerable: true });
   }
 
-  /**
-   * @alias maximumSize
-   */
-
   _createClass(RollingFileWriter, [{
     key: "buildArchiveName",
-
-    /**
-     * Builds an archive name for an index.
-     *
-     * @private
-     * @param ix:number  The index to build.
-     */
     value: function buildArchiveName(ix) {
       var file;
 
-      //(1) build file path
       file = _path2["default"].parse(this.fileName);
       file = file.name + "-" + ix + file.ext;
 
-      //(2) return
       return file;
     }
-
-    /**
-     * Builds an archive path for an index.
-     *
-     * @private
-     * @param ix:number  The index to build.
-     */
   }, {
     key: "buildArchivePath",
     value: function buildArchivePath(ix) {
       return _path2["default"].join(this.dirPath, this.buildArchiveName(ix));
     }
-
-    /**
-     * Rolls over the log file synchronously.
-     */
   }, {
     key: "rollOverSync",
     value: function rollOverSync() {
-      //(1) shift
       for (var i = this.maxArchives - 1; i > 0; --i) {
         var arch = this.buildArchivePath(i);
 
         if (_fs2["default"].existsSync(arch)) _fs2["default"].renameSync(arch, this.buildArchivePath(i + 1));
       }
 
-      //(2) archive current file
       if (_fs2["default"].existsSync(this.filePath)) _fs2["default"].renameSync(this.filePath, this.buildArchivePath(1));
       _fs2["default"].writeFileSync(this.filePath, "", this.opOptions);
     }
-
-    /**
-     * @override
-     */
   }, {
     key: "writeSync",
     value: function writeSync(con) {
-      //(1) roll over if needed
       try {
         if (_fs2["default"].statSync(this.filePath).size >= this.maxSize) this.rollOverSync();
       } catch (e) {}
-      //pass
 
-      //(2) write
       _get(Object.getPrototypeOf(RollingFileWriter.prototype), "writeSync", this).call(this, con);
     }
-
-    /**
-     * @override
-     */
   }, {
     key: "writeAsync",
     value: function writeAsync(con) {
@@ -168,10 +104,6 @@ var RollingFileWriter = (function (_FileWriter) {
     get: function get() {
       return this.maximumSize;
     }
-
-    /**
-     * @alias maximumArchives
-     */
   }, {
     key: "maxArchives",
     get: function get() {

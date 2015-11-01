@@ -1,4 +1,3 @@
-//imports
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23,73 +22,39 @@ var _Level = require("../Level");
 
 var _Level2 = _interopRequireDefault(_Level);
 
-/**
- * A console writer.
- *
- * @readonly console:any  The console object with the log/warn/error methods.
- */
-
 var ConsoleWriter = (function (_Writer) {
   _inherits(ConsoleWriter, _Writer);
-
-  /**
-   * Constructor.
-   *
-   * @overload
-   * @noparam
-   *
-   * @overload
-   * @param(attr) pattern
-   *
-   * @overload
-   * @param(attr) console
-   *
-   * @overload
-   * @protected
-   * @param(attr) pattern
-   * @param(attr) console
-   */
 
   function ConsoleWriter() {
     _classCallCheck(this, ConsoleWriter);
 
-    var pat, con;
-
-    //(1) pre: arguments
+    var pats, con;
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
     if (args.length == 1) {
-      if (typeof args[0] == "string") pat = args[0];else con = args[0];
-    } else if (args.length > 1) {
-      pat = args[0];
+      pats = args[0];
+    } else if (args.length >= 2) {
+      pats = args[0];
       con = args[1];
     }
 
     if (!con) con = console;
 
-    //(2) superconstructor
-    _get(Object.getPrototypeOf(ConsoleWriter.prototype), "constructor", this).call(this, pat);
+    _get(Object.getPrototypeOf(ConsoleWriter.prototype), "constructor", this).call(this, pats);
 
-    //(3) init
     Object.defineProperty(this, "console", { value: con, enumerable: true });
   }
-
-  /**
-   * @override
-   */
 
   _createClass(ConsoleWriter, [{
     key: "write",
     value: function write(entry) {
       var print;
 
-      //(1) get print() function
       if (entry.level == _Level2["default"].DEBUG || entry.level == _Level2["default"].INFO) print = this.console.log;else if (entry.level == _Level2["default"].WARN) print = this.console.error;else print = this.console.error;
 
-      //(2) print
       print(this.format(entry));
     }
   }]);

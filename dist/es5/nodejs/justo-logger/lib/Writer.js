@@ -1,9 +1,3 @@
-/**
- * A writer.
- *
- * @abstract
- * @readonly pattern:string  The format pattern.
- */
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14,76 +8,54 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var DEFAULT_PATTERNS = {
+  debug: "%l [%t]: %m",
+  info: "%l [%t]: %m",
+  warn: "%l [%t]: %m",
+  error: "%l [%t]: %m",
+  fatal: "%l [%t]: %m"
+};
+
 var Writer = (function () {
-  /**
-   * Constructor.
-   *
-   * @param(attr) pattern
-   */
-
-  function Writer() {
-    var pattern = arguments.length <= 0 || arguments[0] === undefined ? Writer.DEFAULT_PATTERN : arguments[0];
-
+  function Writer(patterns) {
     _classCallCheck(this, Writer);
 
-    Object.defineProperty(this, "pattern", { value: pattern, enumerable: true });
-  }
+    if (typeof patterns == "string") {
+      patterns = {
+        debug: patterns,
+        info: patterns,
+        warn: patterns,
+        error: patterns,
+        fatal: patterns
+      };
+    }
 
-  /**
-   * Writes a log entry.
-   *
-   * @abstract
-   * @param entry:LogEntry  The log entry.
-   */
+    Object.defineProperty(this, "patterns", { value: Object.assign(DEFAULT_PATTERNS, patterns), enumerable: true });
+  }
 
   _createClass(Writer, [{
     key: "write",
     value: function write(entry) {
       throw new Error("Abstract method.");
     }
-
-    /**
-     * Builds the line to write.
-     *
-     * @protected
-     * @param entry:LogEntry  The log entry to build.
-     */
   }, {
     key: "format",
     value: function format(entry) {
       var line;
 
-      //(1) format
-      line = this.pattern;
+      line = this.patterns[entry.level.name.toLowerCase()];
       line = line.replace("%l", this.formatLevel(entry));
       line = line.replace("%s", entry.source.qn);
       line = line.replace("%t", this.formatTimestamp(entry));
       line = line.replace("%m", entry.message);
 
-      //(2) return
       return line;
     }
-
-    /**
-     * Formats the level.
-     *
-     * @protected
-     * @param entry:LogEntry  The entry.
-     * @return string
-     */
   }, {
     key: "formatLevel",
     value: function formatLevel(entry) {
       return entry.level.name;
     }
-
-    /**
-     * Formats a timestamp.
-     *
-     * @protected
-     * @param entry:LogEntry  The entry.
-     * @return string
-     */
   }, {
     key: "formatTimestamp",
     value: function formatTimestamp(entry) {
@@ -113,5 +85,5 @@ var Writer = (function () {
 
 exports["default"] = Writer;
 
-Object.defineProperty(Writer, "DEFAULT_PATTERN", { value: "%l [%t]: %m" });
+Object.defineProperty(Writer, "DEFAULT_PATTERNS", { value: DEFAULT_PATTERNS });
 module.exports = exports["default"];

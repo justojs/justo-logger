@@ -1,6 +1,6 @@
 {
   "name": "justo-logger",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A simple logger for Node.js and browsers.",
   "homepage": "https://github.com/justojs/justo-logger",
   "license": "MIT",
@@ -44,7 +44,7 @@
     "url": "https://github.com/justojs/justo-logger.git"
   },
   "engines": {
-    "node": ">=0.12.0"
+    "node": ">=4.0"
   },
   "dependencies": {
     "colors": "^1.0.3"
@@ -53,7 +53,7 @@
   "devDependencies": {
     "async": "*",
     "grunt": "^0.4.5",
-    "grunt-babel": "*",
+    "grunt-babel": "^5.0.0",
     "grunt-contrib-clean": "*",
     "grunt-contrib-copy": "*",
     "grunt-contrib-jshint": "*",

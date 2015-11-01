@@ -45,7 +45,7 @@ describe("writer.RollingFileWriter", function() {
     it("constructor(dirPath, fileName)", function() {
       var writer = new RollingFileWriter(TMP_DIR, FILE_NAME);
 
-      writer.pattern.must.be.eq(RollingFileWriter.DEFAULT_PATTERN);
+      writer.patterns.must.be.eq(RollingFileWriter.DEFAULT_PATTERNS);
       writer.dirPath.must.be.eq(TMP_DIR);
       writer.fileName.must.be.eq(FILE_NAME);
       writer.sync.must.be.eq(RollingFileWriter.DEFAULT_OPTIONS.sync);
@@ -60,7 +60,7 @@ describe("writer.RollingFileWriter", function() {
     it("constructor(dirPath, fileName, opts)", function() {
       var writer = new RollingFileWriter(TMP_DIR, FILE_NAME, {sync: true, batch: 2, maxSize: 1024, maxArchives: 5});
 
-      writer.pattern.must.be.eq(RollingFileWriter.DEFAULT_PATTERN);
+      writer.patterns.must.be.eq(RollingFileWriter.DEFAULT_PATTERNS);
       writer.dirPath.must.be.eq(TMP_DIR);
       writer.fileName.must.be.eq(FILE_NAME);
       writer.sync.must.be.eq(true);
@@ -75,7 +75,13 @@ describe("writer.RollingFileWriter", function() {
     it("constructor(pattern, dirPath, fileName)", function() {
       var writer = new RollingFileWriter("%l: %m", TMP_DIR, FILE_NAME);
 
-      writer.pattern.must.be.eq("%l: %m");
+      writer.patterns.must.be.eq({
+        debug: "%l: %m",
+        info: "%l: %m",
+        warn: "%l: %m",
+        error: "%l: %m",
+        fatal: "%l: %m"
+      });
       writer.dirPath.must.be.eq(TMP_DIR);
       writer.fileName.must.be.eq(FILE_NAME);
       writer.sync.must.be.eq(RollingFileWriter.DEFAULT_OPTIONS.sync);
@@ -90,7 +96,13 @@ describe("writer.RollingFileWriter", function() {
     it("constructor(pattern, dirPath, fileName, opts)", function() {
       var writer = new RollingFileWriter("%l: %m", TMP_DIR, FILE_NAME, {sync: true, batch: 2, maxSize: 1024, maxArchives: 5});
 
-      writer.pattern.must.be.eq("%l: %m");
+      writer.patterns.must.be.eq({
+        debug: "%l: %m",
+        info: "%l: %m",
+        warn: "%l: %m",
+        error: "%l: %m",
+        fatal: "%l: %m"
+      });
       writer.dirPath.must.be.eq(TMP_DIR);
       writer.fileName.must.be.eq(FILE_NAME);
       writer.sync.must.be.eq(true);
@@ -105,7 +117,7 @@ describe("writer.RollingFileWriter", function() {
     it("constructor(dirPath, fileName, opts) - Special situations", function() {
       var writer = new RollingFileWriter(TMP_DIR, FILE_NAME, {maxSize: -1024, maxArchives: -5});
 
-      writer.pattern.must.be.eq(RollingFileWriter.DEFAULT_PATTERN);
+      writer.patterns.must.be.eq(RollingFileWriter.DEFAULT_PATTERNS);
       writer.dirPath.must.be.eq(TMP_DIR);
       writer.fileName.must.be.eq(FILE_NAME);
       writer.sync.must.be.eq(RollingFileWriter.DEFAULT_OPTIONS.sync);

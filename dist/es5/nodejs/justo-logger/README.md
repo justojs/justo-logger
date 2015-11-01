@@ -168,6 +168,18 @@ use the following wildcards:
 
 The default pattern is `%l [%t]: %m`.
 
+Each level can have its own pattern. Example:
+
+```
+new ConsoleWriter({
+  info: "%m",
+  debug: "%l: %m",
+  warn: "%l [%t]: %m",
+  error: "%l [%t]: %m",
+  fatal: "%l [%t]: %m"
+});
+```
+
 ### Console writers
 
 The library implements two writers for console: `ConsoleWriter` and `ColoredConsoleWriter`.
@@ -177,8 +189,9 @@ The library implements two writers for console: `ConsoleWriter` and `ColoredCons
 The `ConsoleWriter` writes the log entries in the console. Constructors:
 
 ```
-new ConsoleWriter()
-new ConsoleWriter(pattern : string)
+constructor()
+constructor(pattern : string)
+constructor(patterns : object)
 ```
 
 The writer writes the DEBUG and INFO entries using `console.log()`, while the other levels with `console.error()`.
@@ -191,17 +204,18 @@ the message with colors.
 Constructors:
 
 ```
-new ColoredConsoleWriter()
-new ColoredConsoleWriter(pattern : string)
-new ColoredConsoleWriter(theme : object)
-new ColoredConsoleWriter(pattern : string, theme : object)
+constructor()
+constructor(pattern : string)
+constructor(patterns : object)
+constructor(pattern : string, theme : object)
+constructor(patterns : object, theme : object)
 ```
 
 Example:
 
 ```
 var logger = new Logger("app");
-logger.onWrite(new ColoredConsoleWriter({
+logger.onWrite(new ColoredConsoleWriter({}, {
   debug: "grey",
   info: "white",
   warn: "yellow",
@@ -235,13 +249,15 @@ A `FileWriter` writes in a file. It can be synchronous or asynchronous.
 Constructors:
 
 ```
-new FileWriter(dirPath : string, fileName : string)
-new FileWriter(dirPath : string, fileName : string, options : object)
-new FileWriter(pattern : string, dirPath : string, fileName : string)
-new FileWriter(pattern : string, dirPath : string, fileName : string, options : object)
+constructor(dirPath : string, fileName : string)
+constructor(dirPath : string, fileName : string, options : object)
+constructor(pattern : string, dirPath : string, fileName : string)
+constructor(patterns : object, dirPath : string, fileName : string)
+constructor(pattern : string, dirPath : string, fileName : string, options : object)
+constructor(patterns : object, dirPath : string, fileName : string, options : object)
 ```
 
-The `pattern` parameter indicates the format pattern. `dirPath` and `fileName` indicate the
+The `pattern` and `patterns` parameters indicate the format pattern. `dirPath` and `fileName` indicate the
 directory path and file name, respectively. And the `options` parameter contains writer options:
 
 - `sync` (Boolean). Is it synchronous? Default: false.
@@ -270,10 +286,12 @@ Constructors:
 new FileWriter(dirPath : string, fileName : string)
 new FileWriter(dirPath : string, fileName : string, options : object)
 new FileWriter(pattern : string, dirPath : string, fileName : string)
+new FileWriter(patterns : object, dirPath : string, fileName : string)
 new FileWriter(pattern : string, dirPath : string, fileName : string, options : object)
+new FileWriter(patterns : object, dirPath : string, fileName : string, options : object)
 ```
 
-The `pattern` parameter indicates the format pattern. `dirPath` and `fileName` indicate the
+The `pattern` and `patterns` parameters indicate the format pattern. `dirPath` and `fileName` indicate the
 directory path and file name, respectively. And the `options` parameter contains writer options:
 
 - `batch` (Number). The batch size. Default: 1.
