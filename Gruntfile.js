@@ -17,11 +17,10 @@ module.exports = function (grunt) {
           "build/es5/lib/Level.js": "lib/Level.js",
           "build/es5/lib/LogEntry.js": "lib/LogEntry.js",
           "build/es5/lib/Logger.js": "lib/Logger.js",
-          "build/es5/lib/Writer.js": "lib/Writer.js",
-          "build/es5/lib/writer/ConsoleWriter.js": "lib/writer/ConsoleWriter.js",
-          "build/es5/lib/writer/ColoredConsoleWriter.js": "lib/writer/ColoredConsoleWriter.js",
-          "build/es5/lib/writer/FileWriter.js": "lib/writer/FileWriter.js",
-          "build/es5/lib/writer/RollingFileWriter.js": "lib/writer/RollingFileWriter.js"
+          "build/es5/lib/Loggers.js": "lib/Loggers.js",
+          "build/es5/lib/logger/ColoredConsoleLogger.js": "lib/logger/ColoredConsoleLogger.js",
+          "build/es5/lib/logger/ConsoleLogger.js": "lib/logger/ConsoleLogger.js",
+          "build/es5/lib/logger/util.js": "lib/logger/util.js"
         }
       }
     },
@@ -35,7 +34,7 @@ module.exports = function (grunt) {
     copy: {
       nodejs: {
         files: [
-          {cwd: "build/es5/", src: ["lib/*.js", "lib/writer/*.js"], dest: "dist/es5/nodejs/<%= pkg.name %>", expand: true},
+          {cwd: "build/es5/", src: ["lib/*.js", "lib/logger/*.js"], dest: "dist/es5/nodejs/<%= pkg.name %>", expand: true},
           {src: ["package.json", "README.md"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
           {src: ["test/**/*.*"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true}
         ]
@@ -49,7 +48,10 @@ module.exports = function (grunt) {
 
       lib: {
         options: {
-          jshintrc: true
+          jshintrc: true,
+          ignores: [
+            "lib/index.js"
+          ]
         },
 
         src: ["lib/**"]
@@ -58,7 +60,6 @@ module.exports = function (grunt) {
       test: {
         options: {
           jshintrc: true,
-
           ignores: [
             "test/**/mocha.opts"
           ]
@@ -84,6 +85,7 @@ module.exports = function (grunt) {
         src: [
           "test/unit/init.js",
           "test/unit/**/*.js",
+          "!test/unit/lib/writer/*.js"
         ]
       }
     },

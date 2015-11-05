@@ -1,21 +1,14 @@
 [![Build Status](https://travis-ci.org/justojs/justo-logger.svg?branch=master)](https://travis-ci.org/vitxorg/justo-logger)
 
-A simple logger for Node.js and browsers.
+A simple logger for Node.js.
 
 *Proudly made with ♥ in Valencia, Spain, EU.*
-
-Features:
-
-- The logger supports several levels: DEBUG, INFO, WARN, ERROR and FATAL.
-- The logger supports several writers: console, colored console, file and rolling file.
-- Each writer can configure its own format pattern.
 
 ## Usage
 
 ```
 npm install justo-logger
 ```
-
 
 By convention, the package should be imported as `log`:
 
@@ -26,30 +19,33 @@ const log = require("justo-logger");
 ## Table of contents
 
 1. [Architecture](#architecture)
-2. [Logger](#logger)
-3. [Writers](#writers)
-
-------------------
+2. [Log levels](#log-levels)
+3. [Format patterns](#format-patterns)
+4. [Console loggers](#console-loggers)
+5. [Colored console loggers](#colored-console-loggers)
+6. [Loggers](#loggers)
 
 ## Architecture
 
-We have two basic components:
+We have a unique component, the logger. A **logger** represents an object to write
+log entries. The logger is the component to receive the log messages. When the user
+registers a log message, the logger creates a log entry and writes it if the entry
+level is greater than or equal to the minimum level configured.
 
-- `Logger`. Component with which the user must interact.
-- `Writer`. Component that writes the log entries in the console, a file, a database, etc.
+A log entry contains:
 
-A logger can have zero, one or more writers associated.
-The user must associate the writers to the logger, being the logger which passes the log entries to the writers.
-If we don't associate any writer, nothing will be written.
+- The source logger.
+- The level.
+- The timestamp, when the entry was created.
+- The message.
 
 Here's an illustrative example:
 
 ```
 //(1) create logger and writer
-var logger = new Logger("app", {minLevel: Level.INFO, maxLevel: Level.FATAL});
-logger.onWrite(new ConsoleWriter());
+var logger = new ConsoleLogger("app", {minLevel: Level.INFO, maxLevel: Level.FATAL});
 
-//(2) create log entries
+//(2) write log entries
 logger.debug("My debug message");
 logger.info("My info message");
 logger.warn("My warn message");
@@ -57,43 +53,13 @@ logger.error("My error message");
 logger.fatal("My fatal message");
 ```
 
-The writer will receive the entries INFO, WARN, ERROR and FATAL, but not DEBUG, because we
-have configured the logger to write only the messages with level greater than or equal to INFO.
+The logger receives the entries `DEBUG`, `INFO`, `WARN`, `ERROR` and `FATAL`,
+but it doesn't write `DEBUG`, because we have configured it to write only the
+entries with level greater than or equal to `INFO`.
 
-------------------
+## Levels
 
-## Logger
-
-The logger is the component that receives the log messages. When the user registers a log message,
-the logger creates a log entry that is passed to the writers if the entry level is greater than
-or equal to the min level configured in the logger.
-
-The log entry contains:
-
-- The source.
-- The level.
-- The timestamp, when the entry was created.
-- The message.
-
-For creating a logger, we can use the following constructors:
-
-```
-new Logger(name : string)
-new Logger(name : string, config : object)
-new Logger(parent : Logger, name : string)
-new Logger(parent : Logger, name : string, config : object)
-```
-
-The `parent` is the parent logger. We can create a hierarchy of loggers, for example, a root logger to
-the application and one child logger for each component. All loggers must have a `name`. Finally, the
-`config` parameter contains the configuration of the logger:
-
-- `minLevel` (Level|string). Minimum level to write. Default: `Level.INFO`.
-- `maxLevel` (Level|string). Maximum level to write. Default: `Level.FATAL`.
-
-### Level
-
-The level indicates the importance of the entry, from minor to major:
+The **log level** indicates the importance of the entry, from minor to major:
 
 - `DEBUG`. Debug Message. Only used when development.
 - `INFO`. Informational message.
@@ -122,111 +88,89 @@ logger.debug("This", "is", "the", "message");
 logger.debug("This is the message");
 ```
 
-#### Min level and max level
+## Format patterns
 
-The logger can be configured indicating the minimum level and maximum level
-to write using the properties `minLevel` and `maxLevel`. We can use a `Level`
-item or a string:
+A **format pattern** is a string that describe the entry syntax.
 
-```
-logger.minLevel = "info";
-logger.minLevel = "INFO";
-logger.minLevel = Level.INFO;
-```
+Wildcards:
 
-------------------
-
-## Writers
-
-A writer is a component to write the log entries to a device, for example, the console, a file,
-a database, etc.
-
-We can create any number of writers for a logger. Once created, we have to associate it to the logger,
-using the `Logger.onWrite()` method. For example:
-
-```
-logger.onWrite(new ConsoleWriter());
-```
-
-### Namespace
-
-The writers have their own namespace into the `justo-logger` library, the `writer` property.
-Example:
-
-```
-const log = require("justo-logger");
-const ConsoleWriter = log.writer.ConsoleWriter;
-```
-
-### Format pattern
-
-The writer has associated a pattern that formats the output. This pattern is a string that can
-use the following wildcards:
-
-- `%s`. The source qualified name.
+- `%s`. The source logger name.
 - `%l`. The level. DEBUG, INFO, WARN, etc.
 - `%t`. The timestamp: yyyy-mm-dd hh:mm:ss.
 - `%m`. The message.
 
 The default pattern is `%l [%t]: %m`.
 
-Each level can have its own pattern. Example:
+## Console loggers
 
-```
-new ConsoleWriter({
-  info: "%m",
-  debug: "%l: %m",
-  warn: "%l [%t]: %m",
-  error: "%l [%t]: %m",
-  fatal: "%l [%t]: %m"
-});
-```
-
-### Console writers
-
-The library implements two writers for console: `ConsoleWriter` and `ColoredConsoleWriter`.
-
-#### writer.ConsoleWriter
-
-The `ConsoleWriter` writes the log entries in the console. Constructors:
-
-```
-constructor()
-constructor(pattern : string)
-constructor(patterns : object)
-```
-
-The writer writes the DEBUG and INFO entries using `console.log()`, while the other levels with `console.error()`.
-
-#### writer.ColoredConsoleWriter
-
-The `ColoredConsoleWriter` is similar to `ConsoleWriter` but always uses `console.log()`, but writes
-the message with colors.
+A **console logger** writes to the console. It writes the `DEBUG` and `INFO` entries
+using `console.log()`, while the other levels with `console.error()`.
 
 Constructors:
 
 ```
 constructor()
-constructor(pattern : string)
-constructor(patterns : object)
-constructor(pattern : string, theme : object)
-constructor(patterns : object, theme : object)
+constructor(name : string)
+constructor(name : string, opts : object)
+constructor(opts : object)
 ```
+
+The logger options are:
+
+- `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: true.
+- `minLevel` (Level). The minimum level to write.
+- `maxLevel` (Level). The maximum level to write.
+- `pattern` (string). The format pattern for all entries.
+- `patterns` (object). The format patterns for specified entries:
+  `debug` (string), `info` (string), `warn` (string), `error` (string)
+  and/or `fatal` (string).
 
 Example:
 
 ```
-var logger = new Logger("app");
-logger.onWrite(new ColoredConsoleWriter({}, {
-  debug: "grey",
-  info: "white",
-  warn: "yellow",
-  error: "red",
-  fatal: "red"
-}));
+const log = require("justo-logger");
+const ConsoleLogger = log.logger.ConsoleLogger;
+const Level = log.Level;
+
+var logger = new ConsoleLogger("app", {
+  minLevel: Level.INFO,
+  maxLevel: Level.FATAL,
+  pattern: "%l: %m",
+  patterns: {
+    info: "%m"
+  }
+});
 ```
 
-When a colored console writer is used, we have to create themes, objects with the colors for each
+The default format pattern is `%l: %m`, except for `INFO` that uses `%m`.
+The `DEBUG` entries won't be written, because the minimum level is `INFO`.
+
+## Colored console loggers
+
+A **colored console logger** is similar to `ConsoleLogger`, but always uses `console.log()`
+and it writes the level name with colors.
+
+Constructors:
+
+```
+constructor()
+constructor(name : string)
+constructor(name : string, opts : object)
+constructor(opts : object)
+```
+
+The logger options are:
+
+- `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: true.
+- `minLevel` (Level). The minimum level to write.
+- `maxLevel` (Level). The maximum level to write.
+- `pattern` (string). The format pattern for all entries.
+- `patterns` (object). The format patterns for specified entries:
+  `debug` (string), `info` (string), `warn` (string), `error` (string)
+  and/or `fatal` (string).
+- `theme` (object). The color theme.
+
+When a colored console logger is used, we have to create themes, objects with the colors for each
 level. Right now, we can use the following colors:
 
 - black
@@ -240,71 +184,61 @@ level. Right now, we can use the following colors:
 - white
 - yellow
 
-### File writers
-
-The library contains two writers for writing in log files: `FileWriter` and `RollingFileWriter`.
-
-#### writer.FileWriter
-
-A `FileWriter` writes in a file. It can be synchronous or asynchronous.
-
-Constructors:
+Example:
 
 ```
-constructor(dirPath : string, fileName : string)
-constructor(dirPath : string, fileName : string, options : object)
-constructor(pattern : string, dirPath : string, fileName : string)
-constructor(patterns : object, dirPath : string, fileName : string)
-constructor(pattern : string, dirPath : string, fileName : string, options : object)
-constructor(patterns : object, dirPath : string, fileName : string, options : object)
+const ColoredConsoleLogger = require("justo-logger").logger.ColoredConsoleLogger;
+const Level = require("justo-logger").Level;
+
+var logger = new ColoredConsoleLogger("app", {
+  minLevel: Level.INFO,
+  maxLevel: Level.FATAL,
+  pattern: "%l: %m",
+  patterns: {
+    info: "%m"
+  },
+  theme: {
+    debug: "gray",
+    info: "white",
+    warn: "yellow",
+    error: "red",
+    fatal: "red"
+  }
+});
 ```
 
-The `pattern` and `patterns` parameters indicate the format pattern. `dirPath` and `fileName` indicate the
-directory path and file name, respectively. And the `options` parameter contains writer options:
+## Loggers
 
-- `sync` (Boolean). Is it synchronous? Default: false.
-- `batch` (Number). The batch size. Default: 1.
+The `Loggers` class is an array of loggers. This array contains the following
+methods:
+
+```
+//add a logger
+add(logger)
+
+//invoke the *() method of its loggers
+debug(msg)
+info(msg)
+warn(msg)
+error(msg)
+fatal(msg)
+```
 
 Example:
 
 ```
-//synchronous writer
-logger.onWrite(new FileWriter(os.tmpdir(), "my.log", {sync: true}));
+const log = require("justo-logger");
+const Loggers = log.Loggers;
+const ConsoleLogger = log.logger.ConsoleLogger;
+const Level = log.Level;
 
-//asynchrnous writer
-logger.onWrite(new FileWriter(os.tmpdir(), "my.log"));
+var loggers = new Loggers();
+logger.add(new ConsoleLogger({minLogger: Level: INFO}));
+logger.add(new ColoredConsoleLogger({minLogger: Level: DEBUG}));
+
+//entry written by the 2nd logger
+loggers.debug("the message");
+
+//entry written by all loggers
+loggers.info("the message");
 ```
-
-#### writer.RollingFileWriter
-
-A `RollingFileWriter` is similar to `FileWriter`, but also to archive the log file when it reaches
-a certain size automatically.
-
-This type of writer is always synchronous.
-
-Constructors:
-
-```
-new FileWriter(dirPath : string, fileName : string)
-new FileWriter(dirPath : string, fileName : string, options : object)
-new FileWriter(pattern : string, dirPath : string, fileName : string)
-new FileWriter(patterns : object, dirPath : string, fileName : string)
-new FileWriter(pattern : string, dirPath : string, fileName : string, options : object)
-new FileWriter(patterns : object, dirPath : string, fileName : string, options : object)
-```
-
-The `pattern` and `patterns` parameters indicate the format pattern. `dirPath` and `fileName` indicate the
-directory path and file name, respectively. And the `options` parameter contains writer options:
-
-- `batch` (Number). The batch size. Default: 1.
-- `maxSize` (Number). The maximum size, in bytes, that the file can reach.
-- `maxArchives` (Number). The maximum number of archives that the writer must maintain.
-
-#### Batch mode
-
-The file writers can be configured for writing entries in batch. The config option `batch` allows
-to configure the size. For example, when we set the batch size to 20, the writer will buffer the entries until the
-size is reached. There is only one exception, if we register an entry with a log level greater than or equal to WARN,
-the writing trigger is issued, without reaching the batch size.
-
-The batch mode reduces the disk I/O.

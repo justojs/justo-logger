@@ -5,42 +5,44 @@ Object.defineProperty(exports, "__esModule", {
 });
 var Level = require("./Level");
 exports.Level = Level;
+var LogEntry = require("./LogEntry");
+exports.LogEntry = LogEntry;
+var Loggers = require("./Loggers");
+exports.Loggers = Loggers;
 var Logger = require("./Logger");
 exports.Logger = Logger;
-var Writer = require("./Writer");
-exports.Writer = Writer;
-var writer = Object.defineProperties({}, {
-  ConsoleWriter: {
+var logger = Object.defineProperties({}, {
+  ConsoleLogger: {
     get: function get() {
       "use strict";
-      return require("./writer/ConsoleWriter");
+      return require("./logger/ConsoleLogger");
     },
     configurable: true,
     enumerable: true
   },
-  ColoredConsoleWriter: {
+  ColoredConsoleLogger: {
     get: function get() {
       "use strict";
-      return require("./writer/ColoredConsoleWriter");
+      return require("./logger/ColoredConsoleLogger");
     },
     configurable: true,
     enumerable: true
   },
-  FileWriter: {
+  FileLogger: {
     get: function get() {
       "use strict";
-      return require("./writer/FileWriter");
+      return require("./logger/FileLogger");
     },
     configurable: true,
     enumerable: true
   },
-  RollingFileWriter: {
+  RollingFileLogger: {
     get: function get() {
       "use strict";
-      return require("./writer/RollingFileWriter");
+      return require("./logger/RollingFileLogger");
     },
     configurable: true,
     enumerable: true
   }
 });
-exports.writer = writer;
+exports.logger = logger;

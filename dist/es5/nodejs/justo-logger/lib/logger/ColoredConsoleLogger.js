@@ -14,53 +14,65 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _Writer2 = require("../Writer");
+var _colors = require("colors");
 
-var _Writer3 = _interopRequireDefault(_Writer2);
+var _colors2 = _interopRequireDefault(_colors);
 
-var _Level = require("../Level");
+var _ConsoleLogger2 = require("./ConsoleLogger");
 
-var _Level2 = _interopRequireDefault(_Level);
+var _ConsoleLogger3 = _interopRequireDefault(_ConsoleLogger2);
 
-var ConsoleWriter = (function (_Writer) {
-  _inherits(ConsoleWriter, _Writer);
+var _util = require("./util");
 
-  function ConsoleWriter() {
-    _classCallCheck(this, ConsoleWriter);
+var DEFAULT_THEME = {
+  debug: "gray",
+  info: "white",
+  warn: "yellow",
+  error: "red",
+  fatal: "red"
+};
 
-    var pats, con;
+var ColoredConsoleLogger = (function (_ConsoleLogger) {
+  _inherits(ColoredConsoleLogger, _ConsoleLogger);
+
+  function ColoredConsoleLogger() {
+    _classCallCheck(this, ColoredConsoleLogger);
+
+    var opts = {};
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
     if (args.length == 1) {
-      pats = args[0];
+      if (typeof args[0] != "string") opts = args[0];
     } else if (args.length >= 2) {
-      pats = args[0];
-      con = args[1];
+      opts = args[1];
     }
 
-    if (!con) con = console;
+    _get(Object.getPrototypeOf(ColoredConsoleLogger.prototype), "constructor", this).apply(this, args);
 
-    _get(Object.getPrototypeOf(ConsoleWriter.prototype), "constructor", this).call(this, pats);
-
-    Object.defineProperty(this, "console", { value: con, enumerable: true });
+    Object.defineProperty(this, "theme", { value: Object.assign({}, DEFAULT_THEME, opts.theme), enumerable: true });
   }
 
-  _createClass(ConsoleWriter, [{
-    key: "write",
-    value: function write(entry) {
-      var print;
+  _createClass(ColoredConsoleLogger, [{
+    key: "format",
+    value: function format(entry) {
+      var _this = this;
 
-      if (entry.level == _Level2["default"].DEBUG || entry.level == _Level2["default"].INFO) print = this.console.log;else if (entry.level == _Level2["default"].WARN) print = this.console.error;else print = this.console.error;
-
-      print(this.format(entry));
+      return (0, _util.format)(entry, this.patterns, function (entry) {
+        return _colors2["default"][_this.theme[entry.level.name.toLowerCase()]](entry.level.name);
+      });
+    }
+  }], [{
+    key: "DEFAULT_THEME",
+    get: function get() {
+      return DEFAULT_THEME;
     }
   }]);
 
-  return ConsoleWriter;
-})(_Writer3["default"]);
+  return ColoredConsoleLogger;
+})(_ConsoleLogger3["default"]);
 
-exports["default"] = ConsoleWriter;
+exports["default"] = ColoredConsoleLogger;
 module.exports = exports["default"];

@@ -1,424 +1,491 @@
 //imports
-const assert = require("assert");
 const spy = require("justo-spy");
-const vlog = require("../../../dist/es5/nodejs/justo-logger");
-const Logger = vlog.Logger;
-const Level = vlog.Level;
-const format = require("../../../dist/es5/nodejs/justo-logger/lib/Logger").format;
+const log = require("../../../dist/es5/nodejs/justo-logger");
+const Logger = log.Logger;
+const Level = log.Level;
 
 //suite
-describe("Logger", function() {
-  describe("Root logger", function() {
-    describe("#constructor", function() {
-      describe("Error handling", function() {
-        it("new Logger()", function() {
-          (function() {
-            var logger = new Logger();
-          }).must.raise("The logger must have a name.");
-        });
+describe.only("Logger", function() {
+  const DEFAULT_OPTIONS = Logger.DEFAULT_OPTIONS;
+
+  describe("#constructor()", function() {
+    it("constructor()", function() {
+      var logger = new Logger();
+      logger.must.have({
+        name: "logger",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns
+      });
+    });
+
+    it("constructor(name)", function() {
+      var logger = new Logger("default");
+      logger.must.have({
+        name: "default",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns
+      });
+    });
+
+    it("constructor(opts) - with opts.pattern", function() {
+      var logger = new Logger({
+        enabled: false,
+        minLevel: Level.DEBUG,
+        maxLevel: Level.ERROR,
+        pattern: "%m"
       });
 
-      it("new Logger(name)", function() {
-        var logger = new Logger("test");
+      logger.must.have({
+        name: "logger",
+        enabled: false,
+        disabled: true,
+        minLevel: Level.DEBUG,
+        maxLevel: Level.ERROR,
+        patterns: {
+          debug: "%m",
+          info: "%m",
+          warn: "%m",
+          error: "%m",
+          fatal: "%m"
+        }
+      });
+    });
 
-        assert(logger.parent === undefined);
-        logger.name.must.be.equal("test");
-        logger.qn.must.be.equal("test");
-        logger.minLevel.must.be.equal(Level.INFO);
-        logger.maxLevel.must.be.equal(Level.FATAL);
+    it("constructor(opts) - with opts.patterns", function() {
+      var logger = new Logger({
+        enabled: false,
+        minLevel: Level.DEBUG,
+        maxLevel: Level.ERROR,
+        patterns: {
+          debug: "%m",
+          info: "%m",
+          warn: "%m",
+          error: "%m",
+          fatal: "%m"
+        }
       });
 
-      it("new Logger(name, config)", function() {
-        var logger = new Logger("test", {minLevel: Level.DEBUG, maxLevel: Level.INFO});
+      logger.must.have({
+        name: "logger",
+        enabled: false,
+        disabled: true,
+        minLevel: Level.DEBUG,
+        maxLevel: Level.ERROR,
+        patterns: {
+          debug: "%m",
+          info: "%m",
+          warn: "%m",
+          error: "%m",
+          fatal: "%m"
+        }
+      });
+    });
 
-        assert(logger.parent === undefined);
-        logger.name.must.be.equal("test");
-        logger.qn.must.be.equal("test");
-        logger.minLevel.must.be.equal(Level.DEBUG);
-        logger.maxLevel.must.be.equal(Level.INFO);
+    it("constructor(opts) - with opts.pattern and opts.patterns", function() {
+      var logger = new Logger({
+        enabled: false,
+        minLevel: Level.DEBUG,
+        maxLevel: Level.ERROR,
+        pattern: "%l: %m",
+        patterns: {
+          info: "%m",
+        }
       });
 
-      it("new Logger(name, config) with min/maxLevel as strings", function() {
-        var logger = new Logger("test", {minLevel: "debug", maxLevel: "info"});
+      logger.must.have({
+        name: "logger",
+        enabled: false,
+        disabled: true,
+        minLevel: Level.DEBUG,
+        maxLevel: Level.ERROR,
+        patterns: {
+          debug: "%l: %m",
+          info: "%m",
+          warn: "%l: %m",
+          error: "%l: %m",
+          fatal: "%l: %m"
+        }
+      });
+    });
 
-        assert(logger.parent === undefined);
-        logger.name.must.be.equal("test");
-        logger.qn.must.be.equal("test");
-        logger.minLevel.must.be.same(Level.DEBUG);
-        logger.maxLevel.must.be.same(Level.INFO);
+    it("constructor(name, opts)", function() {
+      var logger = new Logger("default", {enabled: false});
+      logger.must.have({
+        name: "default",
+        enabled: false,
+        disabled: true,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns
       });
     });
   });
 
-  describe("Child logger", function() {
-    var one;
-
-    beforeEach(function() {
-      one = new Logger("one");
-    });
-
-    describe("#constructor", function() {
-      describe("Error handling", function() {
-        it("new Logger(parent)", function() {
-          (function() {
-            var logger = new Logger(one);
-          }).must.raise("The logger must have a name.");
-        });
-      });
-
-      it("new Logger(parent, name)", function() {
-        var logger = new Logger(one, "two");
-
-        logger.parent.must.be.same(one);
-        logger.name.must.be.equal("two");
-        logger.qn.must.be.equal("one.two");
-        logger.minLevel.must.be.equal(Level.INFO);
-        logger.maxLevel.must.be.equal(Level.FATAL);
-      });
-
-      it("new Logger(parent, name, config)", function() {
-        var logger = new Logger(one, "two", {minLevel: Level.DEBUG, maxLevel: Level.ERROR});
-
-        logger.parent.must.be.same(one);
-        logger.name.must.be.equal("two");
-        logger.qn.must.be.equal("one.two");
-        logger.minLevel.must.be.equal(Level.DEBUG);
-        logger.maxLevel.must.be.equal(Level.ERROR);
-      });
-    });
-  });
-
-  describe("Dynamic reconfiguration", function() {
+  describe("#debug()", function() {
     var logger;
 
-    beforeEach(function() {
-      logger = new Logger("app");
+    describe("Logger enabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("debug(msg)", function() {
+        logger.debug("msg");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.DEBUG,
+          message: "msg"
+        });
+      });
+
+      it("debug(...msg)", function() {
+        logger.debug("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.DEBUG,
+          message: "p1 p2 p3"
+        });
+      });
     });
 
-    describe("#minLevel", function() {
-      it("set minLevel from Level", function() {
-        logger.minLevel = Level.DEBUG;
-        logger.minLevel.must.be.same(Level.DEBUG);
+    describe("Logger disabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({enabled: false, minLevel: Level.DEBUG}), ["write() {}"]);
       });
 
-      it("set minLevel from string", function() {
-        logger.minLevel = "debug";
-        logger.minLevel.must.be.same(Level.DEBUG);
+      it("debug(msg)", function() {
+        logger.debug("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+
+      it("debug(...msg)", function() {
+        logger.debug("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(0);
       });
     });
 
-    describe("#maxLevel", function() {
-      it("set maxLevel from Level", function() {
-        logger.maxLevel = Level.ERROR;
-        logger.maxLevel.must.be.same(Level.ERROR);
+    describe("< minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.INFO}), ["write() {}"]);
       });
 
-      it("set maxLevel from string", function() {
-        logger.maxLevel = "error";
-        logger.maxLevel.must.be.same(Level.ERROR);
+      it("debug(msg)", function() {
+        logger.debug("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+    });
+
+    describe("= minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("debug(msg)", function() {
+        logger.debug("msg");
+        logger.spy.called("write()").must.be.eq(1);
       });
     });
   });
 
-  describe("#onWrite()", function() {
+  describe("#info()", function() {
     var logger;
 
-    beforeEach(function() {
-      logger = new Logger("one");
-    });
+    describe("Logger enabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
 
-    describe("Error handling", function() {
-      it("onWrite()", function() {
-        logger.onWrite.must.raise("Listener expected.");
+      it("info(msg)", function() {
+        logger.info("msg");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.INFO,
+          message: "msg"
+        });
+      });
+
+      it("info(...msg)", function() {
+        logger.info("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.INFO,
+          message: "p1 p2 p3"
+        });
       });
     });
 
-    it("onWrite(writer : function)", function() {
-      logger.onWrite(function() {});
-      logger.writers.length.must.be.equal(1);
+    describe("Logger disabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({enabled: false, minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("info(msg)", function() {
+        logger.info("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+
+      it("info(...msg)", function() {
+        logger.info("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+    });
+
+    describe("< minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.WARN}), ["write() {}"]);
+      });
+
+      it("info(msg)", function() {
+        logger.info("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+    });
+
+    describe("= minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.INFO}), ["write() {}"]);
+      });
+
+      it("info(msg)", function() {
+        logger.info("msg");
+        logger.spy.called("write()").must.be.eq(1);
+      });
+    });
+
+    describe("> minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("info(msg)", function() {
+        logger.info("msg");
+        logger.spy.called("write()").must.be.eq(1);
+      });
     });
   });
 
-  describe("Log messages", function() {
-    var logger, writer;
+  describe("#warn()", function() {
+    var logger;
 
-    describe("#debug()", function() {
-      describe("minLevel >= DEBUG", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.DEBUG});
-        });
+    describe("Logger enabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
 
-        describe("Error handling", function() {
-          it("debug()", function() {
-            logger.debug.bind(logger).must.raise("Message expected.");
-          });
-        });
-
-        describe("No writer", function() {
-          it("debug(msg)", function() {
-            logger.debug("My message.");
-          });
-        });
-
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
-
-          it("debug(msg)", function() {
-            logger.debug("My message.");
-            writer.spy.called("write()").must.be.equal(1);
-          });
+      it("warn(msg)", function() {
+        logger.warn("msg");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.WARN,
+          message: "msg"
         });
       });
 
-      describe("minLevel > DEBUG", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.INFO});
-        });
-
-        describe("Error handling", function() {
-          it("debug()", function() {
-            logger.debug.bind(logger).must.raise("Message expected.");
-          });
-        });
-
-        describe("No writer", function() {
-          it("debug(msg)", function() {
-            logger.debug("My message.");
-          });
-        });
-
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
-
-          it("debug(msg)", function() {
-            logger.debug("My message.");
-            writer.spy.called("write()").must.be.equal(0);
-          });
+      it("warn(...msg)", function() {
+        logger.warn("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.WARN,
+          message: "p1 p2 p3"
         });
       });
     });
 
-    describe("#info()", function() {
-      describe("minLevel >= INFO", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.INFO});
-        });
+    describe("Logger disabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({enabled: false, minLevel: Level.DEBUG}), ["write() {}"]);
+      });
 
-        describe("Error handling", function() {
-          it("info()", function() {
-            logger.info.bind(logger).must.raise("Message expected.");
-          });
-        });
+      it("warn(msg)", function() {
+        logger.warn("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
 
-        describe("No writer", function() {
-          it("info(msg)", function() {
-            logger.info("My message.");
-          });
-        });
+      it("warn(...msg)", function() {
+        logger.warn("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+    });
 
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
+    describe("< minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.ERROR}), ["write() {}"]);
+      });
 
-          it("info(msg)", function() {
-            logger.info("My message.");
-            writer.spy.called("write()").must.be.equal(1);
-          });
+      it("warn(msg)", function() {
+        logger.warn("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+    });
+
+    describe("= minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.WARN}), ["write() {}"]);
+      });
+
+      it("warn(msg)", function() {
+        logger.warn("msg");
+        logger.spy.called("write()").must.be.eq(1);
+      });
+    });
+
+    describe("> minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("warn(msg)", function() {
+        logger.warn("msg");
+        logger.spy.called("write()").must.be.eq(1);
+      });
+    });
+  });
+
+  describe("#error()", function() {
+    var logger;
+
+    describe("Logger enabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("error(msg)", function() {
+        logger.error("msg");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.ERROR,
+          message: "msg"
         });
       });
 
-      describe("minLevel > INFO", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.WARN});
-        });
-
-        describe("Error handling", function() {
-          it("info()", function() {
-            logger.info.bind(logger).must.raise("Message expected.");
-          });
-        });
-
-        describe("No writer", function() {
-          it("info(msg)", function() {
-            logger.info("My message.");
-          });
-        });
-
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
-
-          it("info(msg)", function() {
-            logger.info("My message.");
-            writer.spy.called("write()").must.be.equal(0);
-          });
+      it("error(...msg)", function() {
+        logger.error("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.ERROR,
+          message: "p1 p2 p3"
         });
       });
     });
 
-    describe("#warn()", function() {
-      describe("minLevel >= WARN", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.WARN});
-        });
+    describe("Logger disabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({enabled: false, minLevel: Level.DEBUG}), ["write() {}"]);
+      });
 
-        describe("Error handling", function() {
-          it("warn()", function() {
-            logger.warn.bind(logger).must.raise("Message expected.");
-          });
-        });
+      it("error(msg)", function() {
+        logger.error("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
 
-        describe("No writer", function() {
-          it("warn(msg)", function() {
-            logger.warn("My message.");
-          });
-        });
+      it("error(...msg)", function() {
+        logger.error("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+    });
 
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
+    describe("< minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.FATAL}), ["write() {}"]);
+      });
 
-          it("warn(msg)", function() {
-            logger.warn("My message.");
-            writer.spy.called("write()").must.be.equal(1);
-          });
+      it("error(msg)", function() {
+        logger.error("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
+    });
+
+    describe("= minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.ERROR}), ["write() {}"]);
+      });
+
+      it("error(msg)", function() {
+        logger.error("msg");
+        logger.spy.called("write()").must.be.eq(1);
+      });
+    });
+
+    describe("> minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("error(msg)", function() {
+        logger.error("msg");
+        logger.spy.called("write()").must.be.eq(1);
+      });
+    });
+  });
+
+  describe("#fatal()", function() {
+    var logger;
+
+    describe("Logger enabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
+
+      it("fatal(msg)", function() {
+        logger.fatal("msg");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.FATAL,
+          message: "msg"
         });
       });
 
-      describe("minLevel > WARN", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.ERROR});
-        });
-
-        describe("Error handling", function() {
-          it("warn()", function() {
-            logger.warn.bind(logger).must.raise("Message expected.");
-          });
-        });
-
-        describe("No writer", function() {
-          it("warn(msg : string)", function() {
-            logger.warn("My message.");
-          });
-        });
-
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
-
-          it("warn(msg)", function() {
-            logger.warn("My message.");
-            writer.spy.called("write()").must.be.equal(0);
-          });
+      it("fatal(...msg)", function() {
+        logger.fatal("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(1);
+        logger.spy.getCall("write()", 0).arguments[0].must.have({
+          level: Level.FATAL,
+          message: "p1 p2 p3"
         });
       });
     });
 
-    describe("#error()", function() {
-      describe("minLevel >= ERROR", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.ERROR});
-        });
-
-        describe("Error handling", function() {
-          it("error()", function() {
-            logger.error.bind(logger).must.raise("Message expected.");
-          });
-        });
-
-        describe("No writer", function() {
-          it("error(msg)", function() {
-            logger.error("My message.");
-          });
-        });
-
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
-
-          it("error(msg)", function() {
-            logger.error("My message.");
-            writer.spy.called("write()").must.be.equal(1);
-          });
-        });
+    describe("Logger disabled", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({enabled: false, minLevel: Level.DEBUG}), ["write() {}"]);
       });
 
-      describe("minLevel > ERROR", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.FATAL});
-        });
+      it("fatal(msg)", function() {
+        logger.fatal("msg");
+        logger.spy.called("write()").must.be.eq(0);
+      });
 
-        describe("Error handling", function() {
-          it("error()", function() {
-            logger.error.bind(logger).must.raise("Message expected.");
-          });
-        });
-
-        describe("No writer", function() {
-          it("error(msg)", function() {
-            logger.error("My message.");
-          });
-        });
-
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
-
-          it("error(msg)", function() {
-            logger.error("My message.");
-            writer.spy.called("write()").must.be.equal(0);
-          });
-        });
+      it("fatal(...msg)", function() {
+        logger.fatal("p1", "p2", "p3");
+        logger.spy.called("write()").must.be.eq(0);
       });
     });
 
-    describe("#fatal()", function() {
-      describe("minLevel >= FATAL", function() {
-        beforeEach(function() {
-          logger = new Logger("one", {minLevel: Level.FATAL});
-        });
+    describe("= minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.FATAL}), ["write() {}"]);
+      });
 
-        describe("Error handling", function() {
-          it("fatal()", function() {
-            logger.fatal.bind(logger).must.raise("Message expected.");
-          });
-        });
+      it("fatal(msg)", function() {
+        logger.fatal("msg");
+        logger.spy.called("write()").must.be.eq(1);
+      });
+    });
 
-        describe("No writer", function() {
-          it("fatal(msg)", function() {
-            logger.fatal("My message.");
-          });
-        });
+    describe("> minimum level", function() {
+      beforeEach(function() {
+        logger = spy(new Logger({minLevel: Level.DEBUG}), ["write() {}"]);
+      });
 
-        describe("With writer", function() {
-          beforeEach(function() {
-            writer = spy({}, "write() {}");
-            logger.onWrite(writer);
-          });
-
-          it("fatal(msg)", function() {
-            logger.fatal("My message.");
-            writer.spy.called("write()").must.be.equal(1);
-          });
-        });
+      it("fatal(msg)", function() {
+        logger.fatal("msg");
+        logger.spy.called("write()").must.be.eq(1);
       });
     });
   });

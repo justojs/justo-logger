@@ -18,72 +18,83 @@ var _LogEntry = require("./LogEntry");
 
 var _LogEntry2 = _interopRequireDefault(_LogEntry);
 
+var DEFAULT_OPTIONS = {
+  enabled: true,
+  minLevel: _Level2["default"].INFO,
+  maxLevel: _Level2["default"].FATAL,
+  pattern: "%l [%t]: %m",
+  patterns: {
+    debug: "%l [%t]: %m",
+    info: "%l [%t]: %m",
+    warn: "%l [%t]: %m",
+    error: "%l [%t]: %m",
+    fatal: "%l [%t]: %m"
+  }
+};
+
+var write = Symbol();
+
 var Logger = (function () {
   function Logger() {
     _classCallCheck(this, Logger);
 
-    var parent, name, config, minLevel, maxLevel;
+    var name, opts;
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    if (args.length == 1 && typeof args[0] == "string") {
+    if (args.length == 1) {
+      if (typeof args[0] == "string") name = args[0];else opts = args[0];
+    } else if (args.length >= 2) {
       name = args[0];
-    } else if (args.length == 2) {
-      if (typeof args[0] == "string") {
-        ;
-        name = args[0];
-        config = args[1];
-      } else {
-        ;
-        parent = args[0];
-        name = args[1];
-      }
-    } else if (args.length > 2) {
-      parent = args[0];
-      name = args[1];
-      config = args[2];
+      opts = args[1];
     }
 
-    if (!name) throw new Error("The logger must have a name.");
-    if (!config) config = {};
+    if (!opts) {
+      opts = Object.assign({}, DEFAULT_OPTIONS);
+    } else {
+      var aux = Object.assign({}, DEFAULT_OPTIONS, opts);
 
-    minLevel = config.minLevel;
-    if (typeof minLevel == "string") minLevel = _Level2["default"][minLevel.toUpperCase()];
+      if (opts.hasOwnProperty("pattern")) {
+        var pattern = opts.pattern;
 
-    maxLevel = config.maxLevel;
-    if (typeof maxLevel == "string") maxLevel = _Level2["default"][maxLevel.toUpperCase()];
+        if (opts.hasOwnProperty("patterns")) {
+          if (!opts.patterns.hasOwnProperty("debug")) aux.patterns.debug = pattern;
+          if (!opts.patterns.hasOwnProperty("info")) aux.patterns.info = pattern;
+          if (!opts.patterns.hasOwnProperty("warn")) aux.patterns.warn = pattern;
+          if (!opts.patterns.hasOwnProperty("error")) aux.patterns.error = pattern;
+          if (!opts.patterns.hasOwnProperty("fatal")) aux.patterns.fatal = pattern;
+        } else {
+          aux.patterns.debug = pattern;
+          aux.patterns.info = pattern;
+          aux.patterns.warn = pattern;
+          aux.patterns.error = pattern;
+          aux.patterns.fatal = pattern;
+        }
+      }
 
-    Object.defineProperty(this, "parent", { value: parent, enumerable: true });
-    Object.defineProperty(this, "name", { value: name, enumerable: true });
-    Object.defineProperty(this, "_minLevel", { value: minLevel || _Level2["default"].INFO, writable: true });
-    Object.defineProperty(this, "_maxLevel", { value: maxLevel || _Level2["default"].FATAL, writable: true });
-    Object.defineProperty(this, "writers", { value: [] });
+      opts = aux;
+    }
+
+    Object.defineProperty(this, "name", { value: name || "logger", enumerable: true });
+    Object.defineProperty(this, "enabled", { value: opts.enabled, enumerable: true });
+    Object.defineProperty(this, "minLevel", { value: opts.minLevel, enumerable: true });
+    Object.defineProperty(this, "maxLevel", { value: opts.maxLevel, enumerable: true });
+    Object.defineProperty(this, "patterns", { value: opts.patterns, enumerable: true });
   }
 
   _createClass(Logger, [{
     key: "write",
-    value: function write(level, msg) {
-      if (!level) throw new Error("Level expected.");
-      if (!msg) throw new Error("Message expected.");
-
-      if (level.value >= this.minLevel.value && level.value <= this.maxLevel.value) {
-        var entry = new _LogEntry2["default"](this, level, new Date(), msg);
-
-        for (var i = 0; i < this.writers.length; ++i) {
-          var writer = this.writers[i];
-
-          if (writer instanceof Function) writer(entry);else writer.write(entry);
-        }
-      }
+    value: function write(entry) {
+      throw new Error("Abstract method.");
     }
   }, {
-    key: "onWrite",
-    value: function onWrite(writer) {
-      if (!writer) throw new Error("Listener expected.");
-
-      this.writers.push(writer);
+    key: write,
+    value: function value(level, msg) {
+      if (this.enabled && level.value >= this.minLevel.value && level.value <= this.maxLevel.value) {
+        this.write(new _LogEntry2["default"](this, level, new Date(), msg.join(" ")));
+      }
     }
   }, {
     key: "debug",
@@ -92,7 +103,7 @@ var Logger = (function () {
         args[_key2] = arguments[_key2];
       }
 
-      this.write(_Level2["default"].DEBUG, args.join(" "));
+      this[write](_Level2["default"].DEBUG, args);
     }
   }, {
     key: "info",
@@ -101,7 +112,7 @@ var Logger = (function () {
         args[_key3] = arguments[_key3];
       }
 
-      this.write(_Level2["default"].INFO, args.join(" "));
+      this[write](_Level2["default"].INFO, args);
     }
   }, {
     key: "warn",
@@ -110,7 +121,7 @@ var Logger = (function () {
         args[_key4] = arguments[_key4];
       }
 
-      this.write(_Level2["default"].WARN, args.join(" "));
+      this[write](_Level2["default"].WARN, args);
     }
   }, {
     key: "error",
@@ -119,7 +130,7 @@ var Logger = (function () {
         args[_key5] = arguments[_key5];
       }
 
-      this.write(_Level2["default"].ERROR, args.join(" "));
+      this[write](_Level2["default"].ERROR, args);
     }
   }, {
     key: "fatal",
@@ -128,35 +139,17 @@ var Logger = (function () {
         args[_key6] = arguments[_key6];
       }
 
-      this.write(_Level2["default"].FATAL, args.join(" "));
+      this[write](_Level2["default"].FATAL, args);
     }
   }, {
-    key: "qualifiedName",
+    key: "disabled",
     get: function get() {
-      return (this.parent ? this.parent.qualifiedName + "." : "") + this.name;
+      return !this.enabled;
     }
-  }, {
-    key: "qn",
+  }], [{
+    key: "DEFAULT_OPTIONS",
     get: function get() {
-      return this.qualifiedName;
-    }
-  }, {
-    key: "minLevel",
-    get: function get() {
-      return this._minLevel;
-    },
-    set: function set(level) {
-      if (typeof level == "string") level = _Level2["default"][level.toUpperCase()];
-      this._minLevel = level;
-    }
-  }, {
-    key: "maxLevel",
-    get: function get() {
-      return this._maxLevel;
-    },
-    set: function set(level) {
-      if (typeof level == "string") level = _Level2["default"][level.toUpperCase()];
-      this._maxLevel = level;
+      return DEFAULT_OPTIONS;
     }
   }]);
 
