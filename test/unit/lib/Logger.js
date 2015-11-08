@@ -21,6 +21,30 @@ describe("Logger", function() {
       });
     });
 
+    it("constructor(undefined)", function() {
+      var logger = new Logger(undefined);
+      logger.must.have({
+        name: "logger",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns
+      });
+    });
+
+    it("constructor(null)", function() {
+      var logger = new Logger(null);
+      logger.must.have({
+        name: "logger",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns
+      });
+    });
+
     it("constructor(name)", function() {
       var logger = new Logger("default");
       logger.must.have({
@@ -138,18 +162,6 @@ describe("Logger", function() {
           error: "%l: %m",
           fatal: "%l: %m"
         }
-      });
-    });
-
-    it("constructor(name, opts)", function() {
-      var logger = new Logger("default", {enabled: false});
-      logger.must.have({
-        name: "default",
-        enabled: false,
-        disabled: true,
-        minLevel: DEFAULT_OPTIONS.minLevel,
-        maxLevel: DEFAULT_OPTIONS.maxLevel,
-        patterns: DEFAULT_OPTIONS.patterns
       });
     });
   });

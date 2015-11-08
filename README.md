@@ -111,13 +111,13 @@ Constructors:
 ```
 constructor()
 constructor(name : string)
-constructor(name : string, opts : object)
 constructor(opts : object)
 ```
 
 The logger options are:
 
-- `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: true.
+- `name` (string). The logger name. Default: `logger`.
+- `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: `true`.
 - `minLevel` (Level or string). The minimum level to write.
 - `maxLevel` (Level or string). The maximum level to write.
 - `pattern` (string). The format pattern for all entries.
@@ -132,7 +132,8 @@ const log = require("justo-logger");
 const ConsoleLogger = log.logger.ConsoleLogger;
 const Level = log.Level;
 
-var logger = new ConsoleLogger("app", {
+var logger = new ConsoleLogger({
+  name: "app",
   minLevel: Level.INFO,
   maxLevel: Level.FATAL,
   pattern: "%l: %m",
@@ -155,13 +156,13 @@ Constructors:
 ```
 constructor()
 constructor(name : string)
-constructor(name : string, opts : object)
 constructor(opts : object)
 ```
 
 The logger options are:
 
-- `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: true.
+- `name` (string). The logger name. Default: `logger`.
+- `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: `true`.
 - `minLevel` (Level or string). The minimum level to write.
 - `maxLevel` (Level or string). The maximum level to write.
 - `pattern` (string). The format pattern for all entries.
@@ -190,7 +191,8 @@ Example:
 const ColoredConsoleLogger = require("justo-logger").logger.ColoredConsoleLogger;
 const Level = require("justo-logger").Level;
 
-var logger = new ColoredConsoleLogger("app", {
+var logger = new ColoredConsoleLogger({
+  name: "app",
   minLevel: Level.INFO,
   maxLevel: Level.FATAL,
   pattern: "%l: %m",

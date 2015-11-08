@@ -19,6 +19,7 @@ var _LogEntry = require("./LogEntry");
 var _LogEntry2 = _interopRequireDefault(_LogEntry);
 
 var DEFAULT_OPTIONS = {
+  name: "logger",
   enabled: true,
   minLevel: _Level2["default"].INFO,
   maxLevel: _Level2["default"].FATAL,
@@ -36,19 +37,12 @@ var write = Symbol();
 
 var Logger = (function () {
   function Logger() {
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
     _classCallCheck(this, Logger);
 
-    var name, opts;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    if (args.length == 1) {
-      if (typeof args[0] == "string") name = args[0];else opts = args[0];
-    } else if (args.length >= 2) {
-      name = args[0];
-      opts = args[1];
+    if (typeof opts == "string") {
+      opts = { name: opts };
     }
 
     if (!opts) {
@@ -80,7 +74,7 @@ var Logger = (function () {
       opts = aux;
     }
 
-    Object.defineProperty(this, "name", { value: name || "logger", enumerable: true });
+    Object.defineProperty(this, "name", { value: opts.name, enumerable: true });
     Object.defineProperty(this, "enabled", { value: opts.enabled, enumerable: true });
     Object.defineProperty(this, "minLevel", { value: opts.minLevel, enumerable: true });
     Object.defineProperty(this, "maxLevel", { value: opts.maxLevel, enumerable: true });
@@ -102,8 +96,8 @@ var Logger = (function () {
   }, {
     key: "debug",
     value: function debug() {
-      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
       this[write](_Level2["default"].DEBUG, args);
@@ -111,8 +105,8 @@ var Logger = (function () {
   }, {
     key: "info",
     value: function info() {
-      for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
       }
 
       this[write](_Level2["default"].INFO, args);
@@ -120,8 +114,8 @@ var Logger = (function () {
   }, {
     key: "warn",
     value: function warn() {
-      for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
+      for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
       }
 
       this[write](_Level2["default"].WARN, args);
@@ -129,8 +123,8 @@ var Logger = (function () {
   }, {
     key: "error",
     value: function error() {
-      for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
+      for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
       }
 
       this[write](_Level2["default"].ERROR, args);
@@ -138,8 +132,8 @@ var Logger = (function () {
   }, {
     key: "fatal",
     value: function fatal() {
-      for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-        args[_key6] = arguments[_key6];
+      for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
       }
 
       this[write](_Level2["default"].FATAL, args);

@@ -24,6 +24,32 @@ describe("ColoredConsoleLogger", function() {
       });
     });
 
+    it("constructor(undefined)", function() {
+      var logger = new ColoredConsoleLogger(undefined);
+      logger.must.have({
+        name: "logger",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns,
+        theme: DEFAULT_THEME
+      });
+    });
+
+    it("constructor(null)", function() {
+      var logger = new ColoredConsoleLogger(null);
+      logger.must.have({
+        name: "logger",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns,
+        theme: DEFAULT_THEME
+      });
+    });
+
     it("constructor(name)", function() {
       var logger = new ColoredConsoleLogger("default");
       logger.must.have({
@@ -74,19 +100,6 @@ describe("ColoredConsoleLogger", function() {
         }
       });
     });
-
-    it("constructor(name, opts)", function() {
-      var logger = new ColoredConsoleLogger("default", {enabled: false});
-      logger.must.have({
-        name: "default",
-        enabled: false,
-        disabled: true,
-        minLevel: DEFAULT_OPTIONS.minLevel,
-        maxLevel: DEFAULT_OPTIONS.maxLevel,
-        patterns: DEFAULT_OPTIONS.patterns,
-        theme: DEFAULT_THEME
-      });
-    });
   });
 
   describe("#format()", function() {
@@ -94,7 +107,7 @@ describe("ColoredConsoleLogger", function() {
 
     describe("All fields", function() {
       beforeEach(function() {
-        logger = new ColoredConsoleLogger("test", {pattern: "%t [%s] %l: %m"});
+        logger = new ColoredConsoleLogger({name: "test", pattern: "%t [%s] %l: %m"});
         debug = new LogEntry(logger, Level.DEBUG, new Date(), "The DEBUG message.");
         info = new LogEntry(logger, Level.INFO, new Date(), "The INFO message.");
         warn = new LogEntry(logger, Level.WARN, new Date(), "The WARN message.");
@@ -125,7 +138,7 @@ describe("ColoredConsoleLogger", function() {
 
     describe("Only some fields", function() {
       beforeEach(function() {
-        logger = new ColoredConsoleLogger("test", {pattern: "%l: %m"});
+        logger = new ColoredConsoleLogger({name: "test", pattern: "%l: %m"});
         debug = new LogEntry(logger, Level.DEBUG, new Date(), "The DEBUG message.");
         info = new LogEntry(logger, Level.INFO, new Date(), "The INFO message.");
         warn = new LogEntry(logger, Level.WARN, new Date(), "The WARN message.");

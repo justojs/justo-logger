@@ -22,6 +22,30 @@ describe("ConsoleLogger", function() {
       });
     });
 
+    it("constructor(undefined)", function() {
+      var logger = new ConsoleLogger(undefined);
+      logger.must.have({
+        name: "logger",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns
+      });
+    });
+
+    it("constructor(null)", function() {
+      var logger = new ConsoleLogger(null);
+      logger.must.have({
+        name: "logger",
+        enabled: DEFAULT_OPTIONS.enabled,
+        disabled: !DEFAULT_OPTIONS.enabled,
+        minLevel: DEFAULT_OPTIONS.minLevel,
+        maxLevel: DEFAULT_OPTIONS.maxLevel,
+        patterns: DEFAULT_OPTIONS.patterns
+      });
+    });
+
     it("constructor(name)", function() {
       var logger = new ConsoleLogger("default");
       logger.must.have({
@@ -55,18 +79,6 @@ describe("ConsoleLogger", function() {
           error: "%m",
           fatal: "%m"
         }
-      });
-    });
-
-    it("constructor(name, opts)", function() {
-      var logger = new ConsoleLogger("default", {enabled: false});
-      logger.must.have({
-        name: "default",
-        enabled: false,
-        disabled: true,
-        minLevel: DEFAULT_OPTIONS.minLevel,
-        maxLevel: DEFAULT_OPTIONS.maxLevel,
-        patterns: DEFAULT_OPTIONS.patterns
       });
     });
   });
@@ -115,7 +127,7 @@ describe("ConsoleLogger", function() {
 
     describe("All fields", function() {
       beforeEach(function() {
-        logger = new ConsoleLogger("test", {pattern: "%t [%s] %l: %m"});
+        logger = new ConsoleLogger({name: "test", pattern: "%t [%s] %l: %m"});
         debug = new LogEntry(logger, Level.DEBUG, new Date(), "The DEBUG message.");
         info = new LogEntry(logger, Level.INFO, new Date(), "The INFO message.");
         warn = new LogEntry(logger, Level.WARN, new Date(), "The WARN message.");
@@ -146,7 +158,7 @@ describe("ConsoleLogger", function() {
 
     describe("Only some fields", function() {
       beforeEach(function() {
-        logger = new ConsoleLogger("test", {pattern: "%l: %m"});
+        logger = new ConsoleLogger({name: "test", pattern: "%l: %m"});
         debug = new LogEntry(logger, Level.DEBUG, new Date(), "The DEBUG message.");
         info = new LogEntry(logger, Level.INFO, new Date(), "The INFO message.");
         warn = new LogEntry(logger, Level.WARN, new Date(), "The WARN message.");
