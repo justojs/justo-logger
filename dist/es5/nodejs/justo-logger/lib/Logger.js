@@ -74,6 +74,9 @@ var Logger = (function () {
         }
       }
 
+      if (typeof aux.minLevel == "string") aux.minLevel = _Level2["default"].parse(aux.minLevel);
+      if (typeof aux.maxLevel == "string") aux.maxLevel = _Level2["default"].parse(aux.maxLevel);
+
       opts = aux;
     }
 

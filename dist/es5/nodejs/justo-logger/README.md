@@ -118,8 +118,8 @@ constructor(opts : object)
 The logger options are:
 
 - `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: true.
-- `minLevel` (Level). The minimum level to write.
-- `maxLevel` (Level). The maximum level to write.
+- `minLevel` (Level or string). The minimum level to write.
+- `maxLevel` (Level or string). The maximum level to write.
 - `pattern` (string). The format pattern for all entries.
 - `patterns` (object). The format patterns for specified entries:
   `debug` (string), `info` (string), `warn` (string), `error` (string)
@@ -162,8 +162,8 @@ constructor(opts : object)
 The logger options are:
 
 - `enabled` (boolean). Must it write the entries? true, yep; false, nope. Default: true.
-- `minLevel` (Level). The minimum level to write.
-- `maxLevel` (Level). The maximum level to write.
+- `minLevel` (Level or string). The minimum level to write.
+- `maxLevel` (Level or string). The maximum level to write.
 - `pattern` (string). The format pattern for all entries.
 - `patterns` (object). The format patterns for specified entries:
   `debug` (string), `info` (string), `warn` (string), `error` (string)

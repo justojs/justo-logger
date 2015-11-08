@@ -5,7 +5,7 @@ const Logger = log.Logger;
 const Level = log.Level;
 
 //suite
-describe.only("Logger", function() {
+describe("Logger", function() {
   const DEFAULT_OPTIONS = Logger.DEFAULT_OPTIONS;
 
   describe("#constructor()", function() {
@@ -92,6 +92,33 @@ describe.only("Logger", function() {
         enabled: false,
         minLevel: Level.DEBUG,
         maxLevel: Level.ERROR,
+        pattern: "%l: %m",
+        patterns: {
+          info: "%m",
+        }
+      });
+
+      logger.must.have({
+        name: "logger",
+        enabled: false,
+        disabled: true,
+        minLevel: Level.DEBUG,
+        maxLevel: Level.ERROR,
+        patterns: {
+          debug: "%l: %m",
+          info: "%m",
+          warn: "%l: %m",
+          error: "%l: %m",
+          fatal: "%l: %m"
+        }
+      });
+    });
+
+    it("constructor(opts) - with minLevel and maxLevel as string", function() {
+      var logger = new Logger({
+        enabled: false,
+        minLevel: "debug",
+        maxLevel: "error",
         pattern: "%l: %m",
         patterns: {
           info: "%m",
