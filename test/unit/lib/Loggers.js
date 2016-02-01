@@ -21,13 +21,13 @@ describe("Loggers", function() {
 
     it("add() - one", function() {
       loggers.add({x: 1});
-      loggers.must.be.eq([{x: 1}]);
+      loggers.items.must.be.eq([{x: 1}]);
     });
 
     it("add() - two", function() {
       loggers.add({x: 1});
       loggers.add({x: 2});
-      loggers.must.be.eq([{x: 1}, {x: 2}]);
+      loggers.items.must.be.eq([{x: 1}, {x: 2}]);
     });
   });
 

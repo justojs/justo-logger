@@ -1,23 +1,33 @@
-"use strict";
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.format = format;
 
-function format(entry, patterns, colorLevel) {
+
+
+
+
+
+format = format;function format(entry, patterns, colorLevel) {
   "use strict";
 
   var line;
 
+
   line = patterns[entry.level.name.toLowerCase()];
-  if (colorLevel) line = line.replace("%l", colorLevel(entry));else line = line.replace("%l", entry.level.name);
+  if (colorLevel) line = line.replace("%l", colorLevel(entry));else 
+  line = line.replace("%l", entry.level.name);
   line = line.replace("%s", entry.source.name);
   line = line.replace("%t", formatTimestamp(entry));
   line = line.replace("%m", entry.message);
 
-  return line;
-}
+
+  return line;}
+
+
+
+
+
+
+
 
 function formatTimestamp(entry) {
   "use strict";
@@ -39,5 +49,4 @@ function formatTimestamp(entry) {
   if (min < 10) min = "0" + min;
   if (sec < 10) sec = "0" + sec;
 
-  return year + "-" + mon + "-" + day + " " + hour + ":" + min + ":" + sec;
-}
+  return year + "-" + mon + "-" + day + " " + hour + ":" + min + ":" + sec;}
